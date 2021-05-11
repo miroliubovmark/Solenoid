@@ -68,10 +68,78 @@ BOOL CrossProductTest()
     return TRUE;
 }
 
+BOOL EllInt_1_Test()
+{
+    F64 f64K = 0.5;
+
+    F64 f64Result = CMathFunc::EllInt_1(f64K);
+    printf("f64Result = %f\n", f64Result);
+
+    return TRUE;
+}
+
+BOOL EllInt_2_Test()
+{
+    F64 f64K = 0.5;
+
+    F64 f64Result = CMathFunc::EllInt_2(f64K);
+    printf("f64Result = %f\n", f64Result);
+
+    return TRUE;
+}
+
+F64 IntegralFunction1(F64 f64Phi, F64 f64R, F64 f64Rs, F64 f64Z)
+{
+    F64 f64CosPhi = cos(f64Phi);
+    F64 f64Result = f64CosPhi * f64CosPhi / pow(f64R * f64R + f64Rs * f64Rs + f64Z * f64Z - 2 * f64R * f64Rs * f64CosPhi, 2.5);
+
+    return f64Result;
+}
+
+F64 IntegralFunction2(F64 f64Phi, F64 f64R, F64 f64Rs, F64 f64Z)
+{
+    F64 f64CosPhi = cos(f64Phi);
+    F64 f64Result = f64Phi / pow(f64R * f64R + f64Rs * f64Rs + f64Z * f64Z - 2 * f64R * f64Rs * f64CosPhi, 1.5);
+
+    return f64Result;
+}
+
+F64 Integrate()
+{
+    F64 f64R, f64Rs, f64Z;
+    f64R = 0.1;
+    f64Rs = 0.025;
+    f64Z = 0.1;
+
+    F64 f64LowLimit, f64TopLimit, f64Step, f64Result;
+    f64LowLimit = 0.0;
+    f64TopLimit = PI;
+    f64Step = 0.01;
+    f64Result = 0.0;
+
+    F64 f64CurrentValue;
+    for(F64 f64Phi = f64LowLimit; f64Phi < f64TopLimit; f64Phi += f64Step)
+    {
+        f64CurrentValue = IntegralFunction1(f64Phi, f64R, f64Rs, f64Z);
+        f64Result += f64CurrentValue * f64Step;
+    }
+
+    return f64Result;
+}
+
 int main()
 {
     printf("========= ToolsTest =========\n\n");
 
+    //EllInt_1_Test();
+    //EllInt_2_Test();
+
+    F64 f64Result;
+    f64Result = Integrate();
+
+    printf("Result = %f\n", f64Result);
+
+    #if 0
     BOOL bRes = CrossProductTest();
 
     if(bRes)
@@ -82,6 +150,7 @@ int main()
     {
         printf("CossProduct ----------- ERROR\n");
     }
+    #endif
 
     return 0;
 }

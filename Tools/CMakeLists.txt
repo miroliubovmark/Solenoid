@@ -6,6 +6,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 
 find_library(FFTW_LIB REQUIRED)
+
 include_directories(${fftw_INCLUDES})
 
 set(HEADER_FILES
@@ -45,3 +46,20 @@ add_executable(${TEST_PROJECT_NAME} ${TEST_PROJECT_NAME}.cpp)
 
 target_link_libraries(${TEST_PROJECT_NAME} Tools)
 target_link_libraries(Tools fftw)
+
+
+# Add BOOST
+
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost 1.65.0 COMPONENTS )
+
+if(Boost_FOUND)
+    message("BOOST found")
+
+    include_directories(${Boost_INCLUDE_DIRS})
+    target_link_libraries(Tools ${Boost_LIBRARIES})
+else()
+    message("BOOST NOT found")
+endif()
