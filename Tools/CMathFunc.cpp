@@ -113,5 +113,35 @@ BOOL CMathFunc::GetMiddleOfVector(const CVector3D& crVector, CPoint3D* pPoint)
     return bResult;
 }
 
+F64 CMathFunc::EllInt_1(F64 f64K)
+{
+    F64 f64Result = boost::math::ellint_1(f64K);
+    return f64Result;
+}
+
+F64 CMathFunc::EllInt_2(F64 f64K)
+{
+    F64 f64Result = boost::math::ellint_2(f64K);
+    return f64Result;
+}
+
+BOOL CMathFunc::WriteCSV(std::vector<std::vector<F64>> Data, std::string strFileName)
+{
+    std::ofstream DestinationFile;
+    DestinationFile.open(strFileName);
+
+    for(size_t i = 0; i < Data.size(); ++i)
+    {
+        for(size_t j = 0; j < Data[i].size(); ++j)
+        {
+            //DestinationFile.write(std::string Data[i][j]);
+        }
+    }
+
+    DestinationFile.close();
+
+    return TRUE;
+}
+
 
 } /* End of namespace Tools */
