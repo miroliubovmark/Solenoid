@@ -11,6 +11,7 @@ CMathFunc::~CMathFunc()
 {
 }
 
+/*
 double CMathFunc::FABS(fftw_complex& complex)
 {
     double root = std::sqrt((complex.re * complex.re) + (complex.im * complex.im));
@@ -37,8 +38,8 @@ bool CMathFunc::RFFT(std::vector<double>& rvSignal, std::vector<double>* pvFrequ
     fftw_plan FFT_Plan = fftw_create_plan(SignalSize, FFTW_FORWARD, FFTW_ESTIMATE);
     fftw_one(FFT_Plan, pComplexSignal, pComplexSpectre);
     fftw_destroy_plan(FFT_Plan);
-
-    /* Create vectors of frequency and values */
+*/
+    /* Create vectors of frequency and values */ /*b
     size_t SpectreSize;
     if(SignalSize % 2 == 0)
     {
@@ -78,6 +79,7 @@ bool CMathFunc::RFFT(fftw_complex* pComplexInput, fftw_complex* pComplexOutput, 
 
     return true;
 }
+*/
 
 BOOL CMathFunc::GetCrossProduct(const CVector3D& crVector1, const CVector3D& crVector2, CVector3D* pResult)
 {

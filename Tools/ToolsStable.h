@@ -4,8 +4,10 @@
 //#include "MagneticField/MagneticFieldStable.h"
 
 #include <vector>
-#include "fftw.h"
+//#include "fftw.h"
 #include "stdint.h"
+#include "stdio.h"
+#include "iostream"
 #include <math.h>
 
 namespace Tools
