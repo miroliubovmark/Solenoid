@@ -26,6 +26,7 @@ BOOL IntegrateRingOfCurrent_Test()
 int main()
 {
     printf("========= MagneticFieldTest =========\n\n");
+    printf("Hello world!\n");
 
     IntegrateRingOfCurrent_Test();
 

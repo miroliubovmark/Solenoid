@@ -113,7 +113,7 @@ BOOL CMathFunc::GetMiddleOfVector(const CVector3D& crVector, CPoint3D* pPoint)
     return bResult;
 }
 
-F64 CMathFunc::EllInt_1(F64 f64K)
+/*F64 CMathFunc::EllInt_1(F64 f64K)
 {
     F64 f64Result = boost::math::ellint_1(f64K);
     return f64Result;
@@ -124,6 +124,7 @@ F64 CMathFunc::EllInt_2(F64 f64K)
     F64 f64Result = boost::math::ellint_2(f64K);
     return f64Result;
 }
+*/
 
 BOOL CMathFunc::WriteCSV(std::vector<std::vector<F64>> Data, std::string strFileName)
 {

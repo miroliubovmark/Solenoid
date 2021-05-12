@@ -19,7 +19,8 @@ public:
     CIntegration();
     ~CIntegration();
 
-
+    static BOOL IntegrateSolenoid(const F64 f64Rs, const CPoint3D Border1, const CPoint3D Border2, const CPoint3D InvestigationPoint,
+                                  U64 N, F64 I_0, F64 WireDensity, CVector3D *pResult);
     static BOOL IntegrateRingOfCurrent(const CPoint3D RingCentrePoint, const F64 f64R, const F64 f64Current,
                                        const CPoint3D InvestigationPoint, const U64 u64NVertexes, CVector3D *pResult);
 

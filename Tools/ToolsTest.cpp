@@ -68,7 +68,7 @@ BOOL CrossProductTest()
     return TRUE;
 }
 
-BOOL EllInt_1_Test()
+/*BOOL EllInt_1_Test()
 {
     F64 f64K = 0.5;
 
@@ -87,6 +87,7 @@ BOOL EllInt_2_Test()
 
     return TRUE;
 }
+*/
 
 F64 IntegralFunction1(F64 f64Phi, F64 f64R, F64 f64Rs, F64 f64Z)
 {
