@@ -60,6 +60,31 @@ BOOL CIntegration::IntegrateRingOfCurrent(const CPoint3D RingCentrePoint, const 
 
     return TRUE;
 }
+BOOL CIntegration::IntegrateSolenoid(const F64 f64Rs, const CPoint3D Border1, const CPoint3D Border2, const CPoint3D InvestigationPoint, U64 u64N, F64 I_0, F64 WireDensity, CVector3D *pResult)
+{
+    F64 f64Step;
+    f64Step = (Border2.m_f64Z - Border1.m_f64Z) / u64N;
+
+    CPoint3D RingCentrePoint;
+    CVector3D CurrentB;
+
+    F64 X, Y, Z, Current;
+
+    for(U64 i = 0; i < u64N; i += 1)
+    {
+        X = Border1.m_f64X;
+        Y = Border2.m_f64Y;
+        Z = Border1.m_f64Z + f64Step * i;
+        RingCentrePoint.SetCoordinates(X, Y, Z);
+
+        Current = I_0 * WireDensity * f64Step;
+
+        RingOfCurrent_Field(RingCentrePoint, f64Rs, Current, InvestigationPoint, &CurrentB);
+        pResult->SetVectorSum(*pResult, CurrentB);
+    }
+
+    return TRUE;
+}
 
 BOOL CIntegration::RingOfCurrent_Field(const CPoint3D RingCentrePoint, const F64 f64Rs, const F64 f64Current, const CPoint3D InvestigationPoint, CVector3D *pResult)
 {

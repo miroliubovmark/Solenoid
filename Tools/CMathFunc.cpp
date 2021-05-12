@@ -11,6 +11,7 @@ CMathFunc::~CMathFunc()
 {
 }
 
+#if 0
 double CMathFunc::FABS(fftw_complex& complex)
 {
     double root = std::sqrt((complex.re * complex.re) + (complex.im * complex.im));
@@ -79,6 +80,8 @@ bool CMathFunc::RFFT(fftw_complex* pComplexInput, fftw_complex* pComplexOutput, 
     return true;
 }
 
+#endif
+
 BOOL CMathFunc::GetCrossProduct(const CVector3D& crVector1, const CVector3D& crVector2, CVector3D* pResult)
 {
     F64 X, Y, Z;
@@ -111,7 +114,7 @@ BOOL CMathFunc::GetMiddleOfVector(const CVector3D& crVector, CPoint3D* pPoint)
     return bResult;
 }
 
-F64 CMathFunc::EllInt_1(F64 f64K)
+/*F64 CMathFunc::EllInt_1(F64 f64K)
 {
     F64 f64Result = boost::math::ellint_1(f64K);
     return f64Result;
@@ -122,6 +125,7 @@ F64 CMathFunc::EllInt_2(F64 f64K)
     F64 f64Result = boost::math::ellint_2(f64K);
     return f64Result;
 }
+*/
 
 BOOL CMathFunc::WriteCSV(std::vector<std::vector<F64>> Data, std::string strFileName)
 {
