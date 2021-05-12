@@ -26,10 +26,28 @@ int main()
 
     //CIntegration::IntegrateRingOfCurrent(RingCentrePoint, f64R, f64Current, InvestigationPoint, u64NVertexes);
     //F64 f64CurrentInRing = f64Current * n * dz;
-    //CIntegration::RingOfCurrent_Field(RingCentrePoint, f64Rs, f64CurrentInRing, InvestigationPoint, &Result);
+    //CIntegration::RingOfCurrent_Field(RingCentrePoint, f64Rs, f64CurrentInRing, InvestigationPoint, &Result);4
+    F64 X, Y, Z;
+    F64 f64M = 1.0;
+    U64 u64NInvestigationPoints;
+    F64 Step = (f64M - f64Rs)/ u64NInvestigationPoints;
+
+    std::list<std::vector<F64>> Data;
 
 
-    CIntegration::IntegrateSolenoid(f64Rs, Border1, Border2, InvestigationPoint, N, I_0, n, &Result);
-    Result.Print();
+
+    for(U64 i = 0; i < u64NInvestigationPoints; ++i)
+    {
+        X = X + Step * i;
+        Y = 0;
+        Z = 0;
+        InvestigationPoint.SetCoordinates(X, Y, Z);
+        CIntegration::IntegrateSolenoid(f64Rs, Border1, Border2, InvestigationPoint, N, I_0, n, &Result);
+
+
+    }
+
+    //CIntegration::IntegrateSolenoid(f64Rs, Border1, Border2, InvestigationPoint, N, I_0, n, &Result);
+    //Result.Print();
     return 0;
 }

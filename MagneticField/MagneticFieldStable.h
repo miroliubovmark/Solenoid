@@ -3,6 +3,8 @@
 
 #include "Tools/ToolsStable.h"
 #include "math.h"
+#include <vector>
+#include <list>
 
 namespace MagneticField
 {
