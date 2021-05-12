@@ -132,11 +132,15 @@ BOOL CMathFunc::WriteCSV(std::vector<std::vector<F64>> Data, std::string strFile
     std::ofstream DestinationFile;
     DestinationFile.open(strFileName);
 
+    std::string strCell;
+
     for(size_t i = 0; i < Data.size(); ++i)
     {
         for(size_t j = 0; j < Data[i].size(); ++j)
         {
-            //DestinationFile.write(std::string Data[i][j]);
+            strCell = std::to_string(Data[i][j]);
+
+            DestinationFile.write(strCell.c_str(), strCell.size());
         }
     }
 
