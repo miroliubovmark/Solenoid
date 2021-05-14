@@ -2,6 +2,9 @@
 
 #include "MagneticFieldStable.h"
 
+
+#define strCellSize 30
+
 using namespace Tools;
 using namespace MagneticField;
 
@@ -12,14 +15,47 @@ void LaunchInfo()
 
 void PrintVector(std::vector<F64> Vector)
 {
-
     for(std::vector<F64>::iterator iter(Vector.begin()); iter != Vector.end(); ++iter)
     {
         printf("%f\n", *iter);
     }
 }
 
-//void()
+BOOL WriteForceProfileToCSV(std::string strFileName, const std::vector<F64>& crVOfX, const std::vector<CVector3D>& crVOfB)
+{
+    std::ofstream DestinationFile;
+    DestinationFile.open(strFileName, std::ofstream::out);
+
+    std::string strX;
+    std::string strBx;
+    std::string strBy;
+    std::string strBz;
+    std::string strLine;
+
+    strX.reserve(strCellSize);
+    strBx.reserve(strCellSize);
+    strBy.reserve(strCellSize);
+    strBz.reserve(strCellSize);
+
+    std::string strHeaderLine = "R, Bx, By, Bz\n";
+    DestinationFile.write(strHeaderLine.c_str(), strHeaderLine.size());
+
+    for(size_t i = 0; i < crVOfX.size(); ++i)
+    {
+        strX = std::to_string(crVOfX[i]);
+        strBx = std::to_string(crVOfB[i].m_f64X);
+        strBy = std::to_string(crVOfB[i].m_f64Y);
+        strBz = std::to_string(crVOfB[i].m_f64Z);
+
+        strLine = strX + "," + strBx + "," + strBy + "," + strBz + "\n";
+
+        DestinationFile.write(strLine.c_str(), strLine.size());
+    }
+
+    DestinationFile.close();
+
+    return TRUE;
+}
 
 int main()
 {
@@ -58,7 +94,7 @@ int main()
     CPoint3D InvestigationPoint;
 
     /** Number of Investigation points */
-    U64 u64NInvestigationPoints = 3;
+    U64 u64NInvestigationPoints = 100;
 
     /** Range of Investigation Point x-coordinate */
     F64 f64R1, f64R2;
@@ -100,7 +136,9 @@ int main()
         VOfB.push_back(B);
     }
 
-
     PrintVector(VOfX);
+
+    std::string strDestinationFileName("/home/mark/Desktop/ForceProfile.csv");
+    WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB);
     return 0;
 }
