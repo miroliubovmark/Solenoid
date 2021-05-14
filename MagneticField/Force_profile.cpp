@@ -2,44 +2,91 @@
 
 #include "MagneticFieldStable.h"
 
+
+#define strCellSize 30
+
 using namespace Tools;
 using namespace MagneticField;
 
-void LaunchInfo()
-{
-    std::cout << "FORCE PROFILE" << std::endl;
-}
-
 void PrintVector(std::vector<F64> Vector)
 {
-
     for(std::vector<F64>::iterator iter(Vector.begin()); iter != Vector.end(); ++iter)
     {
         printf("%f\n", *iter);
     }
 }
 
-//void()
+BOOL WriteForceProfileToCSV(std::string strFileName, const std::vector<F64>& crVOfX, const std::vector<CVector3D>& crVOfB)
+{
+    std::ofstream DestinationFile;
+    DestinationFile.open(strFileName, std::ofstream::out);
+
+    std::string strX;
+    std::string strBx;
+    std::string strBy;
+    std::string strBz;
+    std::string strLine;
+
+    strX.reserve(strCellSize);
+    strBx.reserve(strCellSize);
+    strBy.reserve(strCellSize);
+    strBz.reserve(strCellSize);
+
+    std::string strHeaderLine = "R, Bx, By, Bz\n";
+    DestinationFile.write(strHeaderLine.c_str(), static_cast<S64>(strHeaderLine.size()));
+
+    for(size_t i = 0; i < crVOfX.size(); ++i)
+    {
+        strX = std::to_string(crVOfX[i]);
+        strBx = std::to_string(crVOfB[i].m_f64X);
+        strBy = std::to_string(crVOfB[i].m_f64Y);
+        strBz = std::to_string(crVOfB[i].m_f64Z);
+
+        strLine = strX + "," + strBx + "," + strBy + "," + strBz + "\n";
+
+        DestinationFile.write(strLine.c_str(), static_cast<S64>(strLine.size()));
+    }
+
+    DestinationFile.close();
+
+    return TRUE;
+}
+
+void PrintLaunchInfo(Solenoid solenoid, U64 u64NInvPoints, F64 f64R1, F64 f64R2)
+{
+    std::cout << "##### FORCE PROFILE APPLICATION #####\n" << std::endl;
+    std::cout << "Parameters used in computations:\n" << std::endl;
+    std::cout << "SOLENOID  parameters" << std::endl;
+    std::cout << "\tRs = " << solenoid.m_f64Rs << std::endl;
+    std::cout << "\tLength = " << solenoid.m_f64SolenoidLength << std::endl;
+    std::cout << "\tEdge1_z = " << solenoid.m_SolenoidEdge1.m_f64Z << std::endl;
+    std::cout << "\tEdge2_z = " << solenoid.m_SolenoidEdge2.m_f64Z << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "INVESTIGATION POINTS  parameters" << std::endl;
+    std::cout << "\tNInvestigationPoints = " << u64NInvPoints << std::endl;
+    std::cout << "\tMIN distance = " << f64R1 << std::endl;
+    std::cout << "\tMAX distance = " << f64R2 << std::endl;
+
+}
 
 int main()
 {
-    LaunchInfo();
-
     /** Length of solenoid */
-    F64 f64SolenoidLength = 0.2;    /* m */
+    F64 f64SolenoidLength = 0.01;    /* m */
 
     /** Radius of solenoid */
     F64 f64Rs = 0.025;              /* m */
 
     /** Geometric parameters of solenoid */
-    const CPoint3D SolenoidEdge1(0.0, 0.0, 0.0);
-    const CPoint3D SolenoidEdge2(0.0, 0.0, -f64SolenoidLength);
+    const CPoint3D SolenoidEdge1(0.0, 0.0, -0.05);
+    const CPoint3D SolenoidEdge2(0.0, 0.0, -0.15);
 
     /** Current in wire */
     F64 f64Current = 1;             /* A */
 
     /** Number of Source Points in solenoid */
-    U64 u64NSourcePoints = 1000;
+    U64 u64NSourcePoints = 1;
 
     /** Wire density */
     F64 WireDensity = 1000;
@@ -58,7 +105,7 @@ int main()
     CPoint3D InvestigationPoint;
 
     /** Number of Investigation points */
-    U64 u64NInvestigationPoints = 3;
+    U64 u64NInvestigationPoints = 100;
 
     /** Range of Investigation Point x-coordinate */
     F64 f64R1, f64R2;
@@ -85,6 +132,8 @@ int main()
     /** Vector of B for Investigation Points */
     std::vector<CVector3D> VOfB;
 
+    PrintLaunchInfo(solenoid, u64NInvestigationPoints, f64R1, f64R2);
+
     VOfX.reserve(u64NInvestigationPoints);
     VOfB.reserve(u64NInvestigationPoints);
 
@@ -100,7 +149,15 @@ int main()
         VOfB.push_back(B);
     }
 
+    //PrintVector(VOfX);
+    for(size_t i = 0; i < VOfB.size(); ++i)
+    {
+        printf("%f\n", VOfB[i].m_f64X);
+    }
 
-    PrintVector(VOfX);
+
+
+    //std::string strDestinationFileName("/home/mark/Desktop/ForceProfile.csv");
+    //WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB);
     return 0;
 }

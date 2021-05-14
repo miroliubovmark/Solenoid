@@ -40,7 +40,7 @@ BOOL CIntegration::IntegrateRingOfCurrent(const CPoint3D RingCentrePoint, const 
 
         /* Get B from the element of current */
         CMathFunc::GetCrossProduct(*pdL, *pRadiusVector, pCurrentB);
-        pCurrentB->MultiplyOnScalar(f64Current / pow(pRadiusVector->GetAbs(), 3));
+        pCurrentB->MultiplyOnScalar(f64Current * Mu0 / (4 * PI * pow(pRadiusVector->GetAbs(), 3)));
 
         pB->SetVectorSum(pB, pCurrentB);
 
@@ -61,7 +61,7 @@ BOOL CIntegration::IntegrateRingOfCurrent(const CPoint3D RingCentrePoint, const 
     return TRUE;
 }
 
-BOOL CIntegration::IntegrateSolenoid(const Solenoid& crSolenoid, const CPoint3D InvestigationPoint, F64 WireDensity, CVector3D *pResult)
+BOOL CIntegration::IntegrateSolenoid(const Solenoid& crSolenoid, const CPoint3D& crInvestigationPoint, F64 f64WireDensity, CVector3D *pResult)
 {
     F64 f64Step;
     f64Step = (crSolenoid.m_SolenoidEdge2.m_f64Z- crSolenoid.m_SolenoidEdge1.m_f64Z) / crSolenoid.m_u64NSourcePoints;
@@ -75,33 +75,37 @@ BOOL CIntegration::IntegrateSolenoid(const Solenoid& crSolenoid, const CPoint3D 
 
     for(U64 i = 0; i < crSolenoid.m_u64NSourcePoints; ++i)
     {
-        Z = crSolenoid.m_SolenoidEdge1.m_f64Z + f64Step * i;
+        Z = crSolenoid.m_SolenoidEdge1.m_f64Z + (f64Step / 2) + (f64Step * i);
         RingCentrePoint.SetCoordinates(X, Y, Z);
 
-        Current = crSolenoid.m_f64Current * WireDensity * f64Step;
+        //printf("RingCentrePoint_z = %f\n", RingCentrePoint.m_f64Z);
 
-        RingOfCurrent_Field(RingCentrePoint, crSolenoid.m_f64Rs, Current, InvestigationPoint, &CurrentB);
+        Current = crSolenoid.m_f64Current * f64WireDensity * fabs(f64Step);
+
+        RingOfCurrent_Field(RingCentrePoint, crSolenoid.m_f64Rs, Current, crInvestigationPoint, &CurrentB);
         pResult->SetVectorSum(*pResult, CurrentB);
     }
+
+    //std::exit(1);
 
     return TRUE;
 }
 
-BOOL CIntegration::RingOfCurrent_Field(const CPoint3D RingCentrePoint, const F64 f64Rs, const F64 f64Current, const CPoint3D InvestigationPoint, CVector3D *pResult)
+BOOL CIntegration::RingOfCurrent_Field(const CPoint3D& crRingCentrePoint, const F64 f64Rs, const F64 f64Current, const CPoint3D& crInvestigationPoint, CVector3D *pResult)
 {
     F64 f64R_Result, f64Z_Result, f64X_Result, f64Y_Result, f64R_Integral, f64Z_Integral1, f64Z_Integral2, f64N, f64CosTheta, f64SinTheta;
 
-    f64N = 720;
+    f64N = 1000;
 
     F64 f64R, f64Z;
-    f64R = sqrt(InvestigationPoint.m_f64X * InvestigationPoint.m_f64X + InvestigationPoint.m_f64Y * InvestigationPoint.m_f64Y);
-    f64Z = InvestigationPoint.m_f64Z - RingCentrePoint.m_f64Z;
+    f64R = sqrt(crInvestigationPoint.m_f64X * crInvestigationPoint.m_f64X + crInvestigationPoint.m_f64Y * crInvestigationPoint.m_f64Y);
+    f64Z = crInvestigationPoint.m_f64Z - crRingCentrePoint.m_f64Z;
 
-    f64SinTheta = (InvestigationPoint.m_f64Y - RingCentrePoint.m_f64Y) / f64R;
-    f64CosTheta = (InvestigationPoint.m_f64X - RingCentrePoint.m_f64X) / f64R;
+    f64SinTheta = (crInvestigationPoint.m_f64Y - crRingCentrePoint.m_f64Y) / f64R;
+    f64CosTheta = (crInvestigationPoint.m_f64X - crRingCentrePoint.m_f64X) / f64R;
 
-    f64R_Integral = Br_Integral(f64R, f64Rs, RingCentrePoint.m_f64Z, f64N);
-    f64R_Result = Mu0 * f64Current / (2 * PI) * (InvestigationPoint.m_f64Z - RingCentrePoint.m_f64Z) * f64Rs * f64R_Integral;
+    f64R_Integral = Br_Integral(f64R, f64Rs, crRingCentrePoint.m_f64Z, f64N);
+    f64R_Result = Mu0 * f64Current / (2 * PI) * (crInvestigationPoint.m_f64Z - crRingCentrePoint.m_f64Z) * f64Rs * f64R_Integral;
 
     f64Z_Integral1 = Bz_Integral1(f64R, f64Rs, f64Z, f64N);
     f64Z_Integral2 = Bz_Integral2(f64R, f64Rs, f64Z, f64N);
@@ -176,6 +180,14 @@ F64 CIntegration::Br_IntegralFunction(F64 f64Phi, F64 f64R, F64 f64Rs, F64 f64Z)
 {
     F64 f64CosPhi = cos(f64Phi);
     F64 f64Result = f64CosPhi / pow(f64R * f64R + f64Rs * f64Rs + f64Z * f64Z - 2 * f64R * f64Rs * f64CosPhi, 1.5);
+
+    //F64 f64Temp1 = f64R * f64R + f64Rs * f64Rs + f64Z * f64Z - 2 * f64R * f64Rs * f64CosPhi;
+    //F64 f64Temp2 = pow(f64Temp1, 1.5);
+
+    //printf("Temp1 = %f\n", f64Temp1);
+    //printf("Temp2 = %f\n", f64Temp2);
+
+    //printf("Result = %f\n", f64Result);
 
     return f64Result;
 }
