@@ -9,6 +9,8 @@
 namespace MagneticField
 {
     class CIntegration;
+
+    struct Solenoid;
 } /* End of namespace MAGNETICFIELD */
 
 using namespace Tools;
