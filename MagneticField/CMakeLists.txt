@@ -26,12 +26,10 @@ set(${PROJECT}_SOURCE_FILES
 # Include Project directory
 
 set(MARK_HOSTNAME mark-HP-EliteBook-1050-G1)
-set(DIMA_HOSTNAME mark-mbp)
+set(DIMA_HOSTNAME mark-MBP)
 
 cmake_host_system_information(RESULT _HOSTNAME QUERY HOSTNAME)
-
 message(${_HOSTNAME})
-message(${MARK_HOSTNAME})
 
 if(${_HOSTNAME} STREQUAL ${MARK_HOSTNAME})
     include_directories("/home/mark/QtProjects/MagneticField/")
