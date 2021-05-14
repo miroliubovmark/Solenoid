@@ -101,7 +101,6 @@ int main()
     }
 
 
-
     PrintVector(VOfX);
     return 0;
 }
