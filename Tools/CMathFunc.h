@@ -25,7 +25,7 @@ public:
     //static F64 EllInt_1(F64 f64K);
     //static F64 EllInt_2(F64 f64K);
 
-    static BOOL WriteCSV(std::vector<std::vector<F64>> Data, std::string strFileName);
+    //static BOOL WriteCSV(std::vector<std::vector<F64> *> Data, std::string strFileName);
 };
 
 } /* End of namespace Tools */

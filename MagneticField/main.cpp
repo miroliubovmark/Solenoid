@@ -24,9 +24,6 @@ int main()
     CPoint3D InvestigationPoint(0.1, 0.0, 0.0);
     CVector3D Result;
 
-    //CIntegration::IntegrateRingOfCurrent(RingCentrePoint, f64R, f64Current, InvestigationPoint, u64NVertexes);
-    //F64 f64CurrentInRing = f64Current * n * dz;
-    //CIntegration::RingOfCurrent_Field(RingCentrePoint, f64Rs, f64CurrentInRing, InvestigationPoint, &Result);4
     F64 X, Y, Z;
     F64 f64M = 1.0;
     U64 u64NInvestigationPoints;
@@ -42,7 +39,7 @@ int main()
         Y = 0;
         Z = 0;
         InvestigationPoint.SetCoordinates(X, Y, Z);
-        CIntegration::IntegrateSolenoid(f64Rs, Border1, Border2, InvestigationPoint, N, I_0, n, &Result);
+        //CIntegration::IntegrateSolenoid(f64Rs, Border1, Border2, InvestigationPoint, N, I_0, n, &Result);
 
 
     }

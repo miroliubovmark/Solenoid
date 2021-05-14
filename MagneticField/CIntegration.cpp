@@ -60,26 +60,27 @@ BOOL CIntegration::IntegrateRingOfCurrent(const CPoint3D RingCentrePoint, const 
 
     return TRUE;
 }
-BOOL CIntegration::IntegrateSolenoid(const F64 f64Rs, const CPoint3D Border1, const CPoint3D Border2, const CPoint3D InvestigationPoint, U64 u64N, F64 I_0, F64 WireDensity, CVector3D *pResult)
+
+BOOL CIntegration::IntegrateSolenoid(const Solenoid& crSolenoid, const CPoint3D InvestigationPoint, F64 WireDensity, CVector3D *pResult)
 {
     F64 f64Step;
-    f64Step = (Border2.m_f64Z - Border1.m_f64Z) / u64N;
+    f64Step = (crSolenoid.m_SolenoidEdge2.m_f64Z- crSolenoid.m_SolenoidEdge1.m_f64Z) / crSolenoid.m_u64NSourcePoints;
 
     CPoint3D RingCentrePoint;
     CVector3D CurrentB;
 
     F64 X, Y, Z, Current;
+    X = crSolenoid.m_SolenoidEdge1.m_f64X;
+    Y = crSolenoid.m_SolenoidEdge1.m_f64Y;
 
-    for(U64 i = 0; i < u64N; i += 1)
+    for(U64 i = 0; i < crSolenoid.m_u64NSourcePoints; ++i)
     {
-        X = Border1.m_f64X;
-        Y = Border2.m_f64Y;
-        Z = Border1.m_f64Z + f64Step * i;
+        Z = crSolenoid.m_SolenoidEdge1.m_f64Z + f64Step * i;
         RingCentrePoint.SetCoordinates(X, Y, Z);
 
-        Current = I_0 * WireDensity * f64Step;
+        Current = crSolenoid.m_f64Current * WireDensity * f64Step;
 
-        RingOfCurrent_Field(RingCentrePoint, f64Rs, Current, InvestigationPoint, &CurrentB);
+        RingOfCurrent_Field(RingCentrePoint, crSolenoid.m_f64Rs, Current, InvestigationPoint, &CurrentB);
         pResult->SetVectorSum(*pResult, CurrentB);
     }
 

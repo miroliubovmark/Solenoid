@@ -127,7 +127,8 @@ F64 CMathFunc::EllInt_2(F64 f64K)
 }
 */
 
-BOOL CMathFunc::WriteCSV(std::vector<std::vector<F64>> Data, std::string strFileName)
+/*
+BOOL CMathFunc::WriteCSV(std::vector<std::vector<F64>*> Data, std::string strFileName)
 {
     std::ofstream DestinationFile;
     DestinationFile.open(strFileName);
@@ -138,9 +139,10 @@ BOOL CMathFunc::WriteCSV(std::vector<std::vector<F64>> Data, std::string strFile
     {
         for(size_t j = 0; j < Data[i].size(); ++j)
         {
-            strCell = std::to_string(Data[i][j]);
+            strCell = std::to_string((*Data[i])[j]);
 
             DestinationFile.write(strCell.c_str(), strCell.size());
+            DestinationFile.put(',');
         }
     }
 
@@ -148,6 +150,6 @@ BOOL CMathFunc::WriteCSV(std::vector<std::vector<F64>> Data, std::string strFile
 
     return TRUE;
 }
-
+*/
 
 } /* End of namespace Tools */
