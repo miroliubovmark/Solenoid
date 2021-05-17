@@ -52,6 +52,7 @@ BOOL WriteForceProfileToCSV(std::string strFileName, const std::vector<F64>& crV
     return TRUE;
 }
 
+
 void PrintLaunchInfo(Solenoid solenoid, U64 u64NInvPoints, F64 f64R1, F64 f64R2)
 {
     std::cout << "##### FORCE PROFILE APPLICATION #####\n" << std::endl;
@@ -67,6 +68,41 @@ void PrintLaunchInfo(Solenoid solenoid, U64 u64NInvPoints, F64 f64R1, F64 f64R2)
     std::cout << "\tNInvestigationPoints = " << u64NInvPoints << std::endl;
     std::cout << "\tMIN distance = " << f64R1 << std::endl;
     std::cout << "\tMAX distance = " << f64R2 << std::endl;
+
+BOOL WriteForceProfileToCSV(std::string strFileName, const std::vector<F64>& crVOfX, const std::vector<CVector3D>& crVOfB)
+{
+    std::ofstream DestinationFile;
+    DestinationFile.open(strFileName, std::ofstream::out);
+
+    std::string strX;
+    std::string strBx;
+    std::string strBy;
+    std::string strBz;
+    std::string strLine;
+
+    strX.reserve(strCellSize);
+    strBx.reserve(strCellSize);
+    strBy.reserve(strCellSize);
+    strBz.reserve(strCellSize);
+
+    std::string strHeaderLine = "R, Bx, By, Bz\n";
+    DestinationFile.write(strHeaderLine.c_str(), strHeaderLine.size());
+
+    for(size_t i = 0; i < crVOfX.size(); ++i)
+    {
+        strX = std::to_string(crVOfX[i]);
+        strBx = std::to_string(crVOfB[i].m_f64X);
+        strBy = std::to_string(crVOfB[i].m_f64Y);
+        strBz = std::to_string(crVOfB[i].m_f64Z);
+
+        strLine = strX + "," + strBx + "," + strBy + "," + strBz + "\n";
+
+        DestinationFile.write(strLine.c_str(), strLine.size());
+    }
+
+    DestinationFile.close();
+
+    return TRUE;
 
 }
 
@@ -159,5 +195,10 @@ int main()
 
     //std::string strDestinationFileName("/home/mark/Desktop/ForceProfile.csv");
     //WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB);
+    PrintVector(VOfX);
+
+    std::string strDestinationFileName("/home/mark/Desktop/ForceProfile.csv");
+    WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB);
+
     return 0;
 }
