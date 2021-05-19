@@ -17,6 +17,7 @@ public:
 
     BOOL SetCoordinates(F64 f64X, F64 f64Y, F64 f64Z);
     BOOL Copy(const CPoint3D& crPoint);
+    void Print();
     
     F64 m_f64X;
     F64 m_f64Y;

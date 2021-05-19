@@ -65,6 +65,12 @@ BOOL CrossProductTest()
         return FALSE;
     }
 
+    Vector1.SetCoordinates(1.0, 1.0, 2.0);
+    Vector2.SetCoordinates(5.0, 6.0, 7.0);
+
+    CMathFunc::GetCrossProduct(Vector1, Vector2, &Vector3);
+    Vector3.Print();
+
     return TRUE;
 }
 
@@ -137,9 +143,9 @@ int main()
     //EllInt_2_Test();
 
     F64 f64Result;
-    f64Result = Integrate();
+    //f64Result = Integrate();
 
-    printf("Result = %f\n", f64Result);
+    //printf("Result = %f\n", f64Result);
 
     #if 0
     BOOL bRes = CrossProductTest();

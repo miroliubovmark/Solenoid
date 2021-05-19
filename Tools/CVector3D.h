@@ -38,6 +38,7 @@ public:
     void Print();
     BOOL Copy(const CVector3D& crVector);
     BOOL Copy(CVector3D* pVector);
+    BOOL Clear();
     
     F64 m_f64X;
     F64 m_f64Y;

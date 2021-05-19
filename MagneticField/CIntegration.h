@@ -5,7 +5,7 @@
 #include "Tools/ToolsStable.h"
 
 
-#define Mu0 (4 * PI * (10E-7))
+#define Mu0 (4 * PI * (1E-7))
 
 
 namespace MagneticField
@@ -39,7 +39,7 @@ public:
     CIntegration();
     ~CIntegration();
 
-    static BOOL IntegrateSolenoid(const Solenoid& rSolenoid, const CPoint3D& crInvestigationPoint,
+    static BOOL IntegrateSolenoid(const Solenoid& rSolenoid,  CPoint3D& crInvestigationPoint,
                                   F64 WireDensity, CVector3D *pResult);
     static BOOL IntegrateRingOfCurrent(const CPoint3D RingCentrePoint, const F64 f64R, const F64 f64Current,
                                        const CPoint3D InvestigationPoint, const U64 u64NVertexes, CVector3D *pResult);

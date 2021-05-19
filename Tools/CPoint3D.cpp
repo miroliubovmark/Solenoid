@@ -39,6 +39,13 @@ BOOL CPoint3D::Copy(const CPoint3D& crPoint)
     m_f64X = crPoint.m_f64X;
     m_f64Y = crPoint.m_f64Y;
     m_f64Z = crPoint.m_f64Z;
+
+    return TRUE;
+}
+
+void CPoint3D::Print()
+{
+    printf("X:%.16f\tY:%.16f\tZ:%.16f\n", m_f64X, m_f64Y, m_f64Z);
 }
 
 } /* End of namespace TOOLS */

@@ -61,7 +61,7 @@ BOOL CIntegration::IntegrateRingOfCurrent(const CPoint3D RingCentrePoint, const 
     return TRUE;
 }
 
-BOOL CIntegration::IntegrateSolenoid(const Solenoid& crSolenoid, const CPoint3D& crInvestigationPoint, F64 f64WireDensity, CVector3D *pResult)
+BOOL CIntegration::IntegrateSolenoid(const Solenoid& crSolenoid,  CPoint3D& crInvestigationPoint, F64 f64WireDensity, CVector3D *pResult)
 {
     F64 f64Step;
     f64Step = (crSolenoid.m_SolenoidEdge2.m_f64Z- crSolenoid.m_SolenoidEdge1.m_f64Z) / crSolenoid.m_u64NSourcePoints;
@@ -69,21 +69,22 @@ BOOL CIntegration::IntegrateSolenoid(const Solenoid& crSolenoid, const CPoint3D&
     CPoint3D RingCentrePoint;
     CVector3D CurrentB;
 
-    F64 X, Y, Z, Current;
-    X = crSolenoid.m_SolenoidEdge1.m_f64X;
-    Y = crSolenoid.m_SolenoidEdge1.m_f64Y;
+    pResult->Clear();
+
+    F64 f64RingCentrePoint_X, f64RingCentrePoint_Y, f64RingCentrePoint_Z, f64Current;
+    f64RingCentrePoint_X = crSolenoid.m_SolenoidEdge1.m_f64X;
+    f64RingCentrePoint_Y = crSolenoid.m_SolenoidEdge1.m_f64Y;
+    f64RingCentrePoint_Z = crSolenoid.m_SolenoidEdge1.m_f64Z + (f64Step / 2);
 
     for(U64 i = 0; i < crSolenoid.m_u64NSourcePoints; ++i)
     {
-        Z = crSolenoid.m_SolenoidEdge1.m_f64Z + (f64Step / 2) + (f64Step * i);
-        RingCentrePoint.SetCoordinates(X, Y, Z);
+        RingCentrePoint.SetCoordinates(f64RingCentrePoint_X, f64RingCentrePoint_Y, f64RingCentrePoint_Z);
+        f64Current = crSolenoid.m_f64Current * f64WireDensity * fabs(f64Step);
 
-        //printf("RingCentrePoint_z = %f\n", RingCentrePoint.m_f64Z);
-
-        Current = crSolenoid.m_f64Current * f64WireDensity * fabs(f64Step);
-
-        RingOfCurrent_Field(RingCentrePoint, crSolenoid.m_f64Rs, Current, crInvestigationPoint, &CurrentB);
+        RingOfCurrent_Field(RingCentrePoint, crSolenoid.m_f64Rs, f64Current, crInvestigationPoint, &CurrentB);
         pResult->SetVectorSum(*pResult, CurrentB);
+
+        f64RingCentrePoint_Z += f64Step;
     }
 
     //std::exit(1);
@@ -101,15 +102,23 @@ BOOL CIntegration::RingOfCurrent_Field(const CPoint3D& crRingCentrePoint, const 
     f64R = sqrt(crInvestigationPoint.m_f64X * crInvestigationPoint.m_f64X + crInvestigationPoint.m_f64Y * crInvestigationPoint.m_f64Y);
     f64Z = crInvestigationPoint.m_f64Z - crRingCentrePoint.m_f64Z;
 
-    f64SinTheta = (crInvestigationPoint.m_f64Y - crRingCentrePoint.m_f64Y) / f64R;
-    f64CosTheta = (crInvestigationPoint.m_f64X - crRingCentrePoint.m_f64X) / f64R;
+    if(f64R < 1E-10)
+    {
+        f64SinTheta = 0.0;
+        f64CosTheta = 0.0;
+    }
+    else
+    {
+        f64SinTheta = (crInvestigationPoint.m_f64Y - crRingCentrePoint.m_f64Y) / f64R;
+        f64CosTheta = (crInvestigationPoint.m_f64X - crRingCentrePoint.m_f64X) / f64R;
+    }
 
     f64R_Integral = Br_Integral(f64R, f64Rs, crRingCentrePoint.m_f64Z, f64N);
     f64R_Result = Mu0 * f64Current / (2 * PI) * (crInvestigationPoint.m_f64Z - crRingCentrePoint.m_f64Z) * f64Rs * f64R_Integral;
 
     f64Z_Integral1 = Bz_Integral1(f64R, f64Rs, f64Z, f64N);
     f64Z_Integral2 = Bz_Integral2(f64R, f64Rs, f64Z, f64N);
-    f64Z_Result = Mu0 * f64Current / (2 * PI) * f64Rs * (f64Rs * f64Z_Integral1 - f64R * f64Z_Integral2);
+    f64Z_Result = Mu0 * f64Current * f64Rs / (2 * PI) * (f64Rs * f64Z_Integral1 - f64R * f64Z_Integral2);
 
     f64X_Result = f64R_Result * f64CosTheta;
     f64Y_Result = f64R_Result * f64SinTheta;
@@ -124,7 +133,7 @@ F64 CIntegration::Br_Integral(F64 f64R, F64 f64Rs, F64 f64Z, F64 f64N)
     F64 f64LowLimit, f64TopLimit, f64Step, f64Result;
     f64LowLimit = 0.0;
     f64TopLimit = PI;
-    f64Step = 2 * PI / f64N;
+    f64Step = (f64TopLimit - f64LowLimit) / f64N;
     f64Result = 0.0;
 
     F64 f64CurrentValue;
@@ -143,7 +152,7 @@ F64 CIntegration::Bz_Integral1(F64 f64R, F64 f64Rs, F64 f64Z, F64 f64N)
     F64 f64LowLimit, f64TopLimit, f64Step, f64Result;
     f64LowLimit = 0.0;
     f64TopLimit = PI;
-    f64Step = 2 * PI / f64N;
+    f64Step = (f64TopLimit - f64LowLimit) / f64N;
     f64Result = 0.0;
 
     F64 f64CurrentValue;
@@ -162,7 +171,7 @@ F64 CIntegration::Bz_Integral2(F64 f64R, F64 f64Rs, F64 f64Z, F64 f64N)
     F64 f64LowLimit, f64TopLimit, f64Step, f64Result;
     f64LowLimit = 0.0;
     f64TopLimit = PI;
-    f64Step = 2 * PI / f64N;
+    f64Step = (f64TopLimit - f64LowLimit) / f64N;
     f64Result = 0.0;
 
     F64 f64CurrentValue;

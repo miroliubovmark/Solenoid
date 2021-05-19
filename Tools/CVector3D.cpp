@@ -169,8 +169,8 @@ BOOL CVector3D::RotateAroundZ(CVector3D* pResultVector, F64 f64AngleCos, F64 f64
 {
     F64 f64X, f64Y, f64Z;
 
-    f64X = m_f64X * f64AngleCos + m_f64Y * f64AngleSin;
-    f64Y = -m_f64X * f64AngleSin + m_f64Y * f64AngleCos;
+    f64X = m_f64X * f64AngleCos - m_f64Y * f64AngleSin;
+    f64Y = m_f64X * f64AngleSin + m_f64Y * f64AngleCos;
     f64Z = m_f64Z;
 
     pResultVector->SetCoordinates(f64X, f64Y, f64Z);
@@ -197,6 +197,15 @@ BOOL CVector3D::Copy(CVector3D* pVector)
     m_f64X = pVector->m_f64X;
     m_f64Y = pVector->m_f64Y;
     m_f64Z = pVector->m_f64Z;
+
+    return TRUE;
+}
+
+BOOL CVector3D::Clear()
+{
+    m_f64X = 0.0;
+    m_f64Y = 0.0;
+    m_f64Z = 0.0;
 
     return TRUE;
 }

@@ -52,7 +52,6 @@ BOOL WriteForceProfileToCSV(std::string strFileName, const std::vector<F64>& crV
     return TRUE;
 }
 
-
 void PrintLaunchInfo(Solenoid solenoid, U64 u64NInvPoints, F64 f64R1, F64 f64R2)
 {
     std::cout << "##### FORCE PROFILE APPLICATION #####\n" << std::endl;
@@ -69,41 +68,7 @@ void PrintLaunchInfo(Solenoid solenoid, U64 u64NInvPoints, F64 f64R1, F64 f64R2)
     std::cout << "\tMIN distance = " << f64R1 << std::endl;
     std::cout << "\tMAX distance = " << f64R2 << std::endl;
 
-BOOL WriteForceProfileToCSV(std::string strFileName, const std::vector<F64>& crVOfX, const std::vector<CVector3D>& crVOfB)
-{
-    std::ofstream DestinationFile;
-    DestinationFile.open(strFileName, std::ofstream::out);
-
-    std::string strX;
-    std::string strBx;
-    std::string strBy;
-    std::string strBz;
-    std::string strLine;
-
-    strX.reserve(strCellSize);
-    strBx.reserve(strCellSize);
-    strBy.reserve(strCellSize);
-    strBz.reserve(strCellSize);
-
-    std::string strHeaderLine = "R, Bx, By, Bz\n";
-    DestinationFile.write(strHeaderLine.c_str(), strHeaderLine.size());
-
-    for(size_t i = 0; i < crVOfX.size(); ++i)
-    {
-        strX = std::to_string(crVOfX[i]);
-        strBx = std::to_string(crVOfB[i].m_f64X);
-        strBy = std::to_string(crVOfB[i].m_f64Y);
-        strBz = std::to_string(crVOfB[i].m_f64Z);
-
-        strLine = strX + "," + strBx + "," + strBy + "," + strBz + "\n";
-
-        DestinationFile.write(strLine.c_str(), strLine.size());
-    }
-
-    DestinationFile.close();
-
-    return TRUE;
-
+    std::cout << std::endl << std::endl;
 }
 
 int main()
@@ -141,7 +106,7 @@ int main()
     CPoint3D InvestigationPoint;
 
     /** Number of Investigation points */
-    U64 u64NInvestigationPoints = 100;
+    U64 u64NInvestigationPoints = 1000;
 
     /** Range of Investigation Point x-coordinate */
     F64 f64R1, f64R2;
@@ -160,18 +125,21 @@ int main()
     f64InvPointZ = solenoid.m_SolenoidEdge1.m_f64Z;
 
     /** Vector of magnetic induction */
-    CVector3D B;
+    CVector3D B1, B2;
 
     /** Vector of Investigation Point x-coordinate*/
     std::vector<F64> VOfX;
 
     /** Vector of B for Investigation Points */
-    std::vector<CVector3D> VOfB;
+    std::vector<CVector3D> VOfB1;
+    std::vector<CVector3D> VOfB2;
 
     PrintLaunchInfo(solenoid, u64NInvestigationPoints, f64R1, f64R2);
 
     VOfX.reserve(u64NInvestigationPoints);
-    VOfB.reserve(u64NInvestigationPoints);
+    VOfB1.reserve(u64NInvestigationPoints);
+
+    CPoint3D RingCentrePoint(0.0, 0.0, -0.1);
 
 
     for(U64 u64i = 0; u64i < u64NInvestigationPoints; ++u64i)
@@ -179,26 +147,26 @@ int main()
         f64InvPointX = f64R1 + f64Step * static_cast<F64>(u64i);
         InvestigationPoint.SetCoordinates(f64InvPointX, f64InvPointY, f64InvPointZ);
 
-        CIntegration::IntegrateSolenoid(solenoid, InvestigationPoint, WireDensity, &B);
+        CIntegration::IntegrateSolenoid(solenoid, InvestigationPoint, WireDensity, &B1);
+        CIntegration::RingOfCurrent_Field(RingCentrePoint, f64Rs, f64Current * WireDensity * 0.1, InvestigationPoint, &B2);
 
         VOfX.push_back(f64InvPointX);
-        VOfB.push_back(B);
+        VOfB1.push_back(B1);
+        VOfB2.push_back(B2);
     }
 
     //PrintVector(VOfX);
-    for(size_t i = 0; i < VOfB.size(); ++i)
+    for(size_t i = 0; i < VOfB1.size(); ++i)
     {
-        printf("%f\n", VOfB[i].m_f64X);
+        printf("%f\t%f\n", VOfB1[i].m_f64X, VOfB2[i].m_f64X);
     }
-
-
 
     //std::string strDestinationFileName("/home/mark/Desktop/ForceProfile.csv");
     //WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB);
-    PrintVector(VOfX);
+    //PrintVector(VOfX);
 
-    std::string strDestinationFileName("/home/mark/Desktop/ForceProfile.csv");
-    WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB);
+    //std::string strDestinationFileName("/home/mark/Desktop/ForceProfile.csv");
+    //WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB);
 
     return 0;
 }
