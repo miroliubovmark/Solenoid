@@ -125,7 +125,7 @@ int main()
     f64InvPointZ = solenoid.m_SolenoidEdge1.m_f64Z;
 
     /** Vector of magnetic induction */
-    CVector3D B1, B2;
+    CVector3D B1, B2, B_BS;
 
     /** Vector of Investigation Point x-coordinate*/
     std::vector<F64> VOfX;
@@ -133,36 +133,45 @@ int main()
     /** Vector of B for Investigation Points */
     std::vector<CVector3D> VOfB1;
     std::vector<CVector3D> VOfB2;
+    std::vector<CVector3D> VOfB_BS;
 
     PrintLaunchInfo(solenoid, u64NInvestigationPoints, f64R1, f64R2);
 
     VOfX.reserve(u64NInvestigationPoints);
     VOfB1.reserve(u64NInvestigationPoints);
+    VOfB2.reserve(u64NInvestigationPoints);
+    VOfB_BS.reserve(u64NInvestigationPoints);
 
     CPoint3D RingCentrePoint(0.0, 0.0, -0.1);
 
 
     for(U64 u64i = 0; u64i < u64NInvestigationPoints; ++u64i)
     {
-        f64InvPointX = f64R1 + f64Step * static_cast<F64>(u64i);
-        InvestigationPoint.SetCoordinates(f64InvPointX, f64InvPointY, f64InvPointZ);
+        f64InvPointX = 0 + f64Step * static_cast<F64>(u64i);
+        //InvestigationPoint.SetCoordinates(f64InvPointX, f64InvPointY, f64InvPointZ);
+        InvestigationPoint.SetCoordinates(f64InvPointX, f64InvPointY, 0.2);
 
-        CIntegration::IntegrateSolenoid(solenoid, InvestigationPoint, WireDensity, &B1);
+        //CIntegration::IntegrateSolenoid(solenoid, InvestigationPoint, WireDensity, &B1);
         CIntegration::RingOfCurrent_Field(RingCentrePoint, f64Rs, f64Current * WireDensity * 0.1, InvestigationPoint, &B2);
+
+        CIntegration::RingOfCurrent_BioSavar(RingCentrePoint, f64Rs, f64Current * WireDensity * 0.1, InvestigationPoint, 10000, &B_BS);
 
         VOfX.push_back(f64InvPointX);
         VOfB1.push_back(B1);
         VOfB2.push_back(B2);
+        VOfB_BS.push_back(B_BS);
     }
 
     //PrintVector(VOfX);
     for(size_t i = 0; i < VOfB1.size(); ++i)
     {
-        printf("%f\t%f\n", VOfB1[i].m_f64X, VOfB2[i].m_f64X);
+        //printf("%.7f\t%.7f\t%.7f\n", VOfB1[i].m_f64X, VOfB2[i].m_f64X, VOfB_BS[i].m_f64X);
+        printf("%f\n", VOfB_BS[i].m_f64X / VOfB2[i].m_f64X);
     }
 
-    //std::string strDestinationFileName("/home/mark/Desktop/ForceProfile.csv");
-    //WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB);
+    std::string strDestinationFileName("/home/mark/Desktop/ForceProfile_BS.csv");
+    //WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB1);
+    //WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB_BS);
     //PrintVector(VOfX);
 
     //std::string strDestinationFileName("/home/mark/Desktop/ForceProfile.csv");

@@ -6,6 +6,7 @@ set(MAIN main)
 set(TEST_PROJECT MagneticFieldTest)
 set(SIMULATION Simulation)
 set(FORCE_PROFILE Force_profile)
+set(LINES_OF_FORCE LinesOfForce)
 
 project(${PROJECT})
 
@@ -43,15 +44,18 @@ add_executable(${MAIN} "main.cpp")
 add_executable(${TEST_PROJECT} ${TEST_PROJECT}.cpp)
 add_executable(${SIMULATION} ${SIMULATION}.cpp)
 add_executable(${FORCE_PROFILE} ${FORCE_PROFILE}.cpp)
+add_executable(${LINES_OF_FORCE} ${LINES_OF_FORCE}.cpp)
 
 target_link_libraries(${PROJECT} Tools)
 target_link_libraries(${TEST_PROJECT} Tools)
 target_link_libraries(${MAIN} Tools)
 target_link_libraries(${SIMULATION} Tools)
 target_link_libraries(${FORCE_PROFILE} Tools)
+target_link_libraries(${LINES_OF_FORCE} Tools)
 
 
 target_link_libraries(${TEST_PROJECT} ${PROJECT})
 target_link_libraries(${MAIN} ${PROJECT})
 target_link_libraries(${SIMULATION} ${PROJECT})
 target_link_libraries(${FORCE_PROFILE} ${PROJECT})
+target_link_libraries(${LINES_OF_FORCE} ${PROJECT})

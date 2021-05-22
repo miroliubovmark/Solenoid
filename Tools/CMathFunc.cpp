@@ -152,4 +152,76 @@ BOOL CMathFunc::WriteCSV(std::vector<std::vector<F64>*> Data, std::string strFil
 }
 */
 
+BOOL CMathFunc::WriteCSV(const std::list<std::list<F64>*>& lstColumns, std::string strFileName, std::string strHeader)
+{
+    std::ofstream DestinationFile;
+    DestinationFile.open(strFileName, std::ofstream::out);
+
+    if(!strHeader.empty())
+    {
+        DestinationFile.write(strHeader.c_str(), static_cast<S64>(strHeader.size()));
+    }
+
+    std::vector<std::list<F64>::iterator> vIterators;
+    std::vector<std::list<F64>::iterator> vEnds;
+    vIterators.reserve(lstColumns.size());
+    vEnds.reserve(lstColumns.size());
+
+    std::list<std::list<F64>*>::const_iterator lstColumnsIter(lstColumns.begin());
+
+    for(; lstColumnsIter != lstColumns.end(); ++lstColumnsIter)
+    {
+        std::list<F64>::iterator iter((*lstColumnsIter)->begin());
+        std::list<F64>::iterator end((*lstColumnsIter)->end());
+
+        vIterators.push_back(iter);
+        vEnds.push_back(end);
+    }
+
+    BOOL bEndReached = FALSE;
+
+    std::string strCell;
+    std::string strLine;
+
+    strCell.reserve(CellSize);
+    strLine.reserve(CellSize * vIterators.size());
+
+    /* Iterate on lines */
+    while(!bEndReached)
+    {
+        strLine = "";
+        bEndReached = TRUE;
+
+        /* Iterate on cells in line */
+        for(size_t i = 0; i < vIterators.size(); ++i)
+        {
+            /* Add cell to line */
+            if(vIterators[i] != vEnds[i])
+            {
+                bEndReached = FALSE;
+
+                strCell = std::to_string(*(vIterators[i]));
+                strLine += strCell;
+
+                ++vIterators[i];
+            }
+
+            /* Add ',' to line */
+            if(i < vIterators.size() - 1)
+            {
+                strLine += ',';
+            }
+        }
+
+        strLine += '\n';
+
+        /* Write line to Destination file */
+        DestinationFile.write(strLine.c_str(), static_cast<S64>(strLine.size()));
+    }
+
+    DestinationFile.close();
+
+    return TRUE;
+}
+
 } /* End of namespace Tools */

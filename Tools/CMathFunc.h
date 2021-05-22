@@ -3,6 +3,8 @@
 
 #include "ToolsStable.h"
 
+#define CellSize 30
+
 namespace Tools
 {
 
@@ -26,6 +28,7 @@ public:
     //static F64 EllInt_2(F64 f64K);
 
     //static BOOL WriteCSV(std::vector<std::vector<F64> *> Data, std::string strFileName);
+    static BOOL WriteCSV(const std::list<std::list<F64>*>& lstColumns, std::string strFileName, std::string strHeader = "");
 };
 
 } /* End of namespace Tools */

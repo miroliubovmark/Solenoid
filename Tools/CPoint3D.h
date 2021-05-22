@@ -16,6 +16,7 @@ public:
     ~CPoint3D();
 
     BOOL SetCoordinates(F64 f64X, F64 f64Y, F64 f64Z);
+    BOOL AppendVector(const CVector3D& Vector);
     BOOL Copy(const CPoint3D& crPoint);
     void Print();
     

@@ -11,6 +11,7 @@
 #include <math.h>
 #include <fstream>
 #include <vector>
+#include <list>
 #include <string>
 #include <complex>
 //#include <boost/math/special_functions/ellint_1.hpp>
