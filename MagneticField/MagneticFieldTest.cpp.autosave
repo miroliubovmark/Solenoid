@@ -418,7 +418,7 @@ BOOL Bd_Integral_Test()
         f64R = 0.029793;
         f64Rs = 0.025;
         f64Z = 0.0;
-        u64N = 1000000;
+        u64N = 10000;
         //F64 f64WolframResult = 19.767;
         F64 f64Result = CIntegration::dB_Integral1(f64R, f64Rs, f64Z, u64N);
 
@@ -430,7 +430,7 @@ BOOL Bd_Integral_Test()
         f64R = 0.029793;
         f64Rs = 0.025;
         f64Z = 0.0;
-        u64N = 1000000;
+        u64N = 10000;
 
         //F64 f64WolframResult = 6.97968;
         F64 f64Result = CIntegration::dB_Integral2(f64R, f64Rs, f64Z, u64N);
