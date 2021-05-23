@@ -170,7 +170,7 @@ BOOL Test2()
     for(F64 f64R = 0.0; f64R < 10.0; f64R += 10E-2)
     {
         //F64 f64Result = CIntegration::Br_IntegralFunction(0, f64R, f64Rs, -0.1);
-        F64 f64Result = CIntegration::Br_Integral(f64R, f64Rs, -0.1, 100);
+        F64 f64Result = CIntegration::B_Integral1(f64R, f64Rs, -0.1, 100);
         CIntegration::RingOfCurrent_Field(RingCentrePoint, f64Rs, f64Current, InvPoint, &B);
         printf("%f\n", f64Result);
     }
@@ -193,7 +193,7 @@ BOOL Br_Itegral_Test()
         f64N = 1000.0;
 
         F64 f64WolframResult = 0.235896;
-        F64 f64Result = CIntegration::Br_Integral(f64R, f64Rs, f64Z, f64N);
+        F64 f64Result = CIntegration::B_Integral1(f64R, f64Rs, f64Z, f64N);
 
         printf("Wolfram:\t\t\t%f\n", f64WolframResult);
         printf("CIntegration::Br_Integral:\t%f\n\n", f64Result);
@@ -207,7 +207,7 @@ BOOL Br_Itegral_Test()
         f64N = 1000.0;
 
         F64 f64WolframResult = 0.115046;
-        F64 f64Result = CIntegration::Br_Integral(f64R, f64Rs, f64Z, f64N);
+        F64 f64Result = CIntegration::B_Integral1(f64R, f64Rs, f64Z, f64N);
 
         printf("Wolfram:\t\t\t%f\n", f64WolframResult);
         printf("CIntegration::Br_Integral:\t%f\n\n", f64Result);
@@ -220,7 +220,7 @@ BOOL Br_Itegral_Test()
         f64N = 100000.0;
 
         F64 f64WolframResult = 0.0;
-        F64 f64Result = CIntegration::Br_Integral(f64R, f64Rs, f64Z, f64N);
+        F64 f64Result = CIntegration::B_Integral1(f64R, f64Rs, f64Z, f64N);
 
         printf("Wolfram:\t\t\t%f\n", f64WolframResult);
         printf("CIntegration::Br_Integral:\t%f\n\n", f64Result);
@@ -268,7 +268,7 @@ BOOL Bz_Integral1_Test()
         f64N = 1000.0;
 
         F64 f64WolframResult = 19.767;
-        F64 f64Result = CIntegration::Bz_Integral1(f64R, f64Rs, f64Z, f64N);
+        F64 f64Result = CIntegration::B_Integral2(f64R, f64Rs, f64Z, f64N);
 
         printf("Wolfram:\t\t\t%f\n", f64WolframResult);
         printf("CIntegration::Bz_Integral1:\t%f\n\n", f64Result);
@@ -281,7 +281,7 @@ BOOL Bz_Integral1_Test()
         f64N = 1000.0;
 
         F64 f64WolframResult = 6.97968;
-        F64 f64Result = CIntegration::Bz_Integral1(f64R, f64Rs, f64Z, f64N);
+        F64 f64Result = CIntegration::B_Integral2(f64R, f64Rs, f64Z, f64N);
 
         printf("Wolfram:\t\t\t%f\n", f64WolframResult);
         printf("CIntegration::Bz_Integral1:\t%f\n\n", f64Result);
@@ -340,6 +340,7 @@ BOOL IntegralTest()
 
 BOOL BZ1_FromR()
 {
+    printf("##### BZ1_FromR #####\n");
     F64 f64Rs = 0.025;
 
     std::list<std::list<F64>*> lst;
@@ -353,10 +354,20 @@ BOOL BZ1_FromR()
 
     F64 B;
 
-    for(F64 f64X = 0.0; f64X < 2 * f64Rs; f64X += 0.001)
+    for(F64 f64X = 0.02; f64X < 2 * f64Rs; f64X += 1.0)
     {
         InvP.SetCoordinates(f64X, 0.0, 0.0);
-        B = f64Rs * CIntegration::Bz_Integral1(f64X, f64Rs, 0.0, 10000) - f64X * CIntegration::Bz_Integral2(f64X, f64Rs, 0.0, 10000);
+
+        F64 f64IntR = CIntegration::B_Integral1(f64X, f64Rs, 0.0, 10000);
+
+        F64 f64Int1 = CIntegration::B_Integral2(f64X, f64Rs, 0.0, 10000);
+        F64 f64Int2 = CIntegration::B_Integral1(f64X, f64Rs, 0.0, 10000);
+
+        printf("f64IntR = %f\n", f64IntR);
+        printf("f64Int1 = %f\n", f64Int1);
+        printf("f64Int2 = %f\n", f64Int2);
+
+        B = f64Rs * f64Int1 - f64X * f64Int2;
         //CIntegration::RingOfCurrent_BioSavar(RCP, f64Rs, 1.0, InvP, 10000, &Res);
 
         //B = Res.m_f64Z;
@@ -368,10 +379,19 @@ BOOL BZ1_FromR()
     lst.push_back(&X);
     lst.push_back(&Bz);
 
-    std::string strFileName("/home/mark/Documents/Project/Bz(X)_Int.csv");
+    std::string strFileName("/home/mark/Documents/MagneticField_Data/Bz(X)_Int.csv");
     //CMathFunc::WriteCSV(lst, strFileName);
 
     return TRUE;
+}
+
+BOOL MacroTest()
+{
+    CVector3D B, MagneticMoment;
+    F64 f64V = 1.0;
+
+    GetMagneticMoment(B, f64V, MagneticMoment);
+    return FALSE;
 }
 
 int main()

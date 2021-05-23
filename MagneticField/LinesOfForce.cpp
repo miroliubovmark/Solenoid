@@ -82,7 +82,7 @@ int main()
 
     strHeader += '\n';
 
-    std::string strFileName("/home/mark/Documents/Project/LinesOfForce_Int.csv");
+    std::string strFileName("/home/mark/Documents/MagneticField_Data/LinesOfForce_Int_updated.csv");
     CMathFunc::WriteCSV(lstResult, strFileName, strHeader);
 
     return 0;

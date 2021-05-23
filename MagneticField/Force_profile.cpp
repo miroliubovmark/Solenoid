@@ -125,7 +125,10 @@ int main()
     f64InvPointZ = solenoid.m_SolenoidEdge1.m_f64Z;
 
     /** Vector of magnetic induction */
-    CVector3D B1, B2, B_BS;
+    CVector3D B;    //B1, B2, B_BS;
+
+    /** Vector of magnetic field derivative */
+    CVector3D dB;
 
     /** Vector of Investigation Point x-coordinate*/
     std::vector<F64> VOfX;
@@ -134,6 +137,15 @@ int main()
     std::vector<CVector3D> VOfB1;
     std::vector<CVector3D> VOfB2;
     std::vector<CVector3D> VOfB_BS;
+
+    /** Magnetic moment */
+    CVector3D MagneticMoment;
+
+    /** Volume of the ball */
+    F64 f64V = 1;
+
+    /** Force */
+    CVector3D F;
 
     PrintLaunchInfo(solenoid, u64NInvestigationPoints, f64R1, f64R2);
 
@@ -145,37 +157,68 @@ int main()
     CPoint3D RingCentrePoint(0.0, 0.0, -0.1);
 
 
+    std::list<F64> lst_Bx, lst_By, lst_Bz, lst_dBx, lst_dBy, lst_dBz, lst_Fx, lst_Fy, lst_Fz;
+    std::list<std::list<F64>*> lstData;
+
+    lstData.push_back(&lst_Bx);
+    lstData.push_back(&lst_By);
+    lstData.push_back(&lst_Bz);
+
+    lstData.push_back(&lst_dBx);
+    lstData.push_back(&lst_dBy);
+    lstData.push_back(&lst_dBz);
+
+    lstData.push_back(&lst_Fx);
+    lstData.push_back(&lst_Fy);
+    lstData.push_back(&lst_Fz);
+
     for(U64 u64i = 0; u64i < u64NInvestigationPoints; ++u64i)
     {
-        f64InvPointX = 0 + f64Step * static_cast<F64>(u64i);
-        //InvestigationPoint.SetCoordinates(f64InvPointX, f64InvPointY, f64InvPointZ);
-        InvestigationPoint.SetCoordinates(f64InvPointX, f64InvPointY, 0.2);
+        f64InvPointX = f64R1 + f64Step * static_cast<F64>(u64i);
+        InvestigationPoint.SetCoordinates(f64InvPointX, f64InvPointY, f64InvPointZ);
 
-        //CIntegration::IntegrateSolenoid(solenoid, InvestigationPoint, WireDensity, &B1);
-        CIntegration::RingOfCurrent_Field(RingCentrePoint, f64Rs, f64Current * WireDensity * 0.1, InvestigationPoint, &B2);
+        CIntegration::RingOfCurrent_Field(RingCentrePoint, f64Rs, f64Current * WireDensity * 0.1, InvestigationPoint, &B);
+        CIntegration::RingOfCurrent_FieldDerivative(RingCentrePoint, f64Rs, f64Current * WireDensity * 0.1, InvestigationPoint, &dB);
 
-        CIntegration::RingOfCurrent_BioSavar(RingCentrePoint, f64Rs, f64Current * WireDensity * 0.1, InvestigationPoint, 10000, &B_BS);
+        GetMagneticMoment(B, f64V, MagneticMoment);
+        GetForce(MagneticMoment, dB, F);
+        //MagneticMoment.Print();
 
+        //exit(1);
+
+        lst_Bx.push_back(B.m_f64X);
+        lst_By.push_back(B.m_f64Y);
+        lst_Bz.push_back(B.m_f64Z);
+
+        lst_dBx.push_back(dB.m_f64X);
+        lst_dBy.push_back(dB.m_f64Y);
+        lst_dBz.push_back(dB.m_f64Z);
+
+        lst_Fx.push_back(F.m_f64X);
+        lst_Fy.push_back(F.m_f64Y);
+        lst_Fz.push_back(F.m_f64Z);
+
+
+        /*
         VOfX.push_back(f64InvPointX);
         VOfB1.push_back(B1);
         VOfB2.push_back(B2);
         VOfB_BS.push_back(B_BS);
+        */
     }
 
     //PrintVector(VOfX);
+    /*
     for(size_t i = 0; i < VOfB1.size(); ++i)
     {
-        //printf("%.7f\t%.7f\t%.7f\n", VOfB1[i].m_f64X, VOfB2[i].m_f64X, VOfB_BS[i].m_f64X);
-        printf("%f\n", VOfB_BS[i].m_f64X / VOfB2[i].m_f64X);
+        printf("%.10f\t%.10f\t%.10f\n", VOfB1[i].m_f64X, VOfB2[i].m_f64X, VOfB_BS[i].m_f64X);
+        //printf("%f\n", VOfB_BS[i].m_f64X / VOfB2[i].m_f64X);
     }
+    */
 
-    std::string strDestinationFileName("/home/mark/Desktop/ForceProfile_BS.csv");
-    //WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB1);
-    //WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB_BS);
-    //PrintVector(VOfX);
-
-    //std::string strDestinationFileName("/home/mark/Desktop/ForceProfile.csv");
-    //WriteForceProfileToCSV(strDestinationFileName, VOfX, VOfB);
+    std::string strHeader("Bx, By, Bz, dBx, dBy, dBz, Fx, Fy, Fz\n");
+    std::string strDestinationFileName("/home/mark/Documents/MagneticField_Data/ForceProfile_Int.csv");
+    CMathFunc::WriteCSV(lstData, strDestinationFileName, strHeader);
 
     return 0;
 }
