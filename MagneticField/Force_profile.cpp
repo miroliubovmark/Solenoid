@@ -77,7 +77,7 @@ int main()
     F64 f64SolenoidLength = 0.01;    /* m */
 
     /** Radius of solenoid */
-    F64 f64Rs = 0.025;              /* m */
+    F64 f64Rs = 0.005;              /* m */
 
     /** Geometric parameters of solenoid */
     const CPoint3D SolenoidEdge1(0.0, 0.0, -0.05);
@@ -110,8 +110,8 @@ int main()
 
     /** Range of Investigation Point x-coordinate */
     F64 f64R1, f64R2;
-    f64R1 = f64Rs + 0.00001;
-    f64R2 = 1;                      /* m */
+    f64R1 = 0.0;
+    f64R2 = 0.05;                      /* m */
 
     /** Distance between Investigation Points */
     F64 f64Step = (f64R2 - f64R1) / u64NInvestigationPoints;
@@ -142,7 +142,7 @@ int main()
     CVector3D MagneticMoment;
 
     /** Volume of the ball */
-    F64 f64V = 1;
+    F64 f64V = 4 / 3 * PI * 1E-9;
 
     /** Force */
     CVector3D F;
@@ -154,7 +154,7 @@ int main()
     VOfB2.reserve(u64NInvestigationPoints);
     VOfB_BS.reserve(u64NInvestigationPoints);
 
-    CPoint3D RingCentrePoint(0.0, 0.0, -0.1);
+    CPoint3D RingCentrePoint(0.0, 0.0, -0.05);
 
 
     std::list<F64> lst_Bx, lst_By, lst_Bz, lst_dBr_dr, lst_dBr_dz, lst_Fr, lst_x;
@@ -164,11 +164,17 @@ int main()
 
     F64 f64MagneticMoment_R, f64F1, f64F2, f64Fr;
 
-    for(U64 u64i = 0; u64i < u64NInvestigationPoints; ++u64i)
+    for(U64 u64i = 0.0; u64i < u64NInvestigationPoints; ++u64i)
     {
+
         /* Update investigation point */
         f64InvPointX = f64R1 + f64Step * static_cast<F64>(u64i);
         InvestigationPoint.SetCoordinates(f64InvPointX, f64InvPointY, f64InvPointZ);
+
+        //if((0.0045 < InvestigationPoint.m_f64X) && (InvestigationPoint.m_f64X < 0.0055))
+        //{
+        //    continue;
+        //}
 
         /* Get field and field derivatives */
         CIntegration::RingOfCurrent_Field(RingCentrePoint, f64Rs, f64Current * WireDensity * 0.1, InvestigationPoint, &B);
@@ -179,8 +185,8 @@ int main()
         f64MagneticMoment_R = sqrt(MagneticMoment.m_f64X * MagneticMoment.m_f64X + MagneticMoment.m_f64Y * MagneticMoment.m_f64Y);
 
         /* Get Force projection on R axis */
-        f64F1 = f64MagneticMoment_R * Field_dBr[0];
-        f64F2 = MagneticMoment.m_f64Z * Field_dBr[1];
+        f64F1 = 2000 * f64MagneticMoment_R * Field_dBr[0];
+        f64F2 = 2000 * MagneticMoment.m_f64Z * Field_dBr[1];
 
         f64Fr = f64F1 + f64F2;
 
