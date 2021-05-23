@@ -195,7 +195,6 @@ F64 CIntegration::dB_Integral1(F64 f64R, F64 f64Rs, F64 f64Z, U64 u64N)
         f64CurrentValue = dB_IntegralFunction1(f64Phi, f64R, f64Rs, f64Z);
         f64Result += f64CurrentValue * f64Step;
     }
-
     return f64Result;
 }
 
@@ -214,9 +213,9 @@ F64 CIntegration::dB_Integral2(F64 f64R, F64 f64Rs, F64 f64Z, U64 u64N)
         f64CurrentValue = dB_IntegralFunction2(f64Phi, f64R, f64Rs, f64Z);
         f64Result += f64CurrentValue * f64Step;
     }
-
     return f64Result;
 }
+
 
 F64 CIntegration::B_IntegralFunction1(F64 f64Phi, F64 f64R, F64 f64Rs, F64 f64Z)
 {
