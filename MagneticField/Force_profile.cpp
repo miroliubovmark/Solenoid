@@ -110,7 +110,7 @@ int main()
 
     /** Range of Investigation Point x-coordinate */
     F64 f64R1, f64R2;
-    f64R1 = f64Rs + 0.0001;
+    f64R1 = f64Rs + 0.00001;
     f64R2 = 1;                      /* m */
 
     /** Distance between Investigation Points */

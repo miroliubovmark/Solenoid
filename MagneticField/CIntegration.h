@@ -65,6 +65,7 @@ public:
     static BOOL RingOfCurrent_FieldDerivative(const CPoint3D& crRingCentrePoint, const F64 f64Rs, const F64 f64Current,
                                               const CPoint3D& crInvestigationPoint, F64* Field_dBr);
 
+
     static F64 B_Integral1(F64 f64R, F64 f64Rs, F64 f64Z, F64 f64N);
     static F64 B_IntegralFunction1(F64 f64Phi, F64 f64R, F64 f64Rs, F64 f64Z);
 
