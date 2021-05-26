@@ -132,7 +132,7 @@ BOOL CIntegration::RingOfCurrent_FieldDerivative(const CPoint3D& crRingCentrePoi
     f64_dIntegral1 = dB_Integral1(f64R, f64Rs, f64Z, u64N);
     f64_dIntegral2 = dB_Integral2(f64R, f64Rs, f64Z, u64N);
 
-    f64_dB_dR_Result = -(3 * Mu0 * f64Current * f64Rs) / (2 * PI) * (f64R * f64_dIntegral1 - f64Rs * f64_dIntegral2);
+    f64_dB_dR_Result = -(3 * Mu0 * f64Current * f64Rs) / (2 * PI) * f64Z * (f64R * f64_dIntegral1 - f64Rs * f64_dIntegral2);
     f64_dB_dZ_Result = (Mu0 * f64Current * f64Rs) / (2 * PI) * ((f64R * f64R + f64Rs * f64Rs - 2 * f64Z * f64Z) * f64_dIntegral1 -
                                                                 (2 * f64R * f64Rs * f64_dIntegral2));
 

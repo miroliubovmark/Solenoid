@@ -111,7 +111,7 @@ int main()
     /** Range of Investigation Point x-coordinate */
     F64 f64R1, f64R2;
     f64R1 = 0.0;
-    f64R2 = 0.05;                      /* m */
+    f64R2 = 0.01;                      /* m */
 
     /** Distance between Investigation Points */
     F64 f64Step = (f64R2 - f64R1) / u64NInvestigationPoints;
@@ -164,6 +164,9 @@ int main()
 
     F64 f64MagneticMoment_R, f64F1, f64F2, f64Fr;
 
+    F64 f64Ball_Mu = 5000.0;
+    F64 f64Core_Mu = 400.0;
+
     for(U64 u64i = 0.0; u64i < u64NInvestigationPoints; ++u64i)
     {
 
@@ -181,12 +184,12 @@ int main()
         CIntegration::RingOfCurrent_FieldDerivative(RingCentrePoint, f64Rs, f64Current * WireDensity * 0.1, InvestigationPoint, Field_dBr);
 
         /* Get magnetic moment projection on R axis */
-        GetMagneticMoment(B, f64V, MagneticMoment);
+        GetMagneticMoment(B, f64V, f64Ball_Mu, MagneticMoment);
         f64MagneticMoment_R = sqrt(MagneticMoment.m_f64X * MagneticMoment.m_f64X + MagneticMoment.m_f64Y * MagneticMoment.m_f64Y);
 
         /* Get Force projection on R axis */
-        f64F1 = 2000 * f64MagneticMoment_R * Field_dBr[0];
-        f64F2 = 2000 * MagneticMoment.m_f64Z * Field_dBr[1];
+        f64F1 = f64Core_Mu * f64MagneticMoment_R * Field_dBr[0];
+        f64F2 = f64Core_Mu * MagneticMoment.m_f64Z * Field_dBr[1];
 
         f64Fr = f64F1 + f64F2;
 

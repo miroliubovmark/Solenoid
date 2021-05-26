@@ -9,13 +9,12 @@
 #define LowLimit 0
 #define TopLimit PI
 
-#define Mu 5000
 
-#define GetMagneticMoment(B, f64V, pMagneticMoment) \
+#define GetMagneticMoment(B, f64V, f64Mu, pMagneticMoment) \
 {\
-    (pMagneticMoment).m_f64X = (Mu - 1) * (B).m_f64X * (f64V) / (Mu * Mu0);\
-    (pMagneticMoment).m_f64Y = (Mu - 1) * (B).m_f64Y * (f64V) / (Mu * Mu0);\
-    (pMagneticMoment).m_f64Z = (Mu - 1) * (B).m_f64Z * (f64V) / (Mu * Mu0);\
+    (pMagneticMoment).m_f64X = (f64Mu - 1) * (B).m_f64X * (f64V) / (f64Mu * Mu0);\
+    (pMagneticMoment).m_f64Y = (f64Mu - 1) * (B).m_f64Y * (f64V) / (f64Mu * Mu0);\
+    (pMagneticMoment).m_f64Z = (f64Mu - 1) * (B).m_f64Z * (f64V) / (f64Mu * Mu0);\
 }
 
 #define GetForce(MagneticMoment, Field_dBr, F)\

@@ -183,6 +183,7 @@ BOOL CMathFunc::WriteCSV(const std::list<std::list<F64>*>& lstColumns, std::stri
     std::string strCell;
     std::string strLine;
 
+
     strCell.reserve(CellSize);
     strLine.reserve(CellSize * vIterators.size());
 
@@ -200,7 +201,12 @@ BOOL CMathFunc::WriteCSV(const std::list<std::list<F64>*>& lstColumns, std::stri
             {
                 bEndReached = FALSE;
 
-                strCell = std::to_string(*(vIterators[i]));
+                //strCell = std::to_string(*(vIterators[i]));
+                std::ostringstream StringStream;
+
+                StringStream << *(vIterators[i]);
+                strCell = StringStream.str();
+
                 strLine += strCell;
 
                 ++vIterators[i];

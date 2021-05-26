@@ -14,6 +14,7 @@
 #include <list>
 #include <string>
 #include <complex>
+#include <sstream>
 //#include <boost/math/special_functions/ellint_1.hpp>
 //#include <boost/math/special_functions/ellint_2.hpp>
 
