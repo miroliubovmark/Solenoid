@@ -53,7 +53,7 @@ BOOL CIntegration::RingOfCurrent_BioSavar(const CPoint3D RingCentrePoint, const 
     return TRUE;
 }
 
-BOOL CIntegration::IntegrateSolenoid(const Solenoid& crSolenoid, const CPoint3D& crInvestigationPoint, F64 f64WireDensity, CVector3D *pResult)
+BOOL CIntegration::IntegrateSolenoid_Field(const Solenoid& crSolenoid, const CPoint3D& crInvestigationPoint, F64 f64WireDensity, CVector3D *pResult)
 {
     F64 f64Step;
     f64Step = (crSolenoid.m_SolenoidEdge2.m_f64Z- crSolenoid.m_SolenoidEdge1.m_f64Z) / crSolenoid.m_u64NSourcePoints;
@@ -79,7 +79,56 @@ BOOL CIntegration::IntegrateSolenoid(const Solenoid& crSolenoid, const CPoint3D&
         f64RingCentrePoint_Z += f64Step;
     }
 
-    //std::exit(1);
+    return TRUE;
+}
+
+BOOL CIntegration::IntegrateSolenoid_Force(const Solenoid& crSolenoid, Ball& rBall, const CPoint3D& crInvestigationPoint, F64 f64WireDensity, F64* pf64Fr_Result)
+{
+    *pf64Fr_Result = 0;
+
+    F64 f64Step;
+    f64Step = (crSolenoid.m_SolenoidEdge2.m_f64Z- crSolenoid.m_SolenoidEdge1.m_f64Z) / crSolenoid.m_u64NSourcePoints;
+
+    CPoint3D RingCentrePoint;
+    CVector3D CurrentB;
+
+    F64 f64RingCentrePoint_X, f64RingCentrePoint_Y, f64RingCentrePoint_Z, f64Current;
+    f64RingCentrePoint_X = crSolenoid.m_SolenoidEdge1.m_f64X;
+    f64RingCentrePoint_Y = crSolenoid.m_SolenoidEdge1.m_f64Y;
+    f64RingCentrePoint_Z = crSolenoid.m_SolenoidEdge1.m_f64Z + (f64Step / 2);
+
+    F64 Field_dBr[2];
+    F64 f64MagneticMoment_R, f64F1, f64F2, f64CurrentFr;
+
+    for(U64 i = 0; i < crSolenoid.m_u64NSourcePoints; ++i)
+    {
+        /* Set updated co-ordinates to RingCentrePoint */
+        RingCentrePoint.SetCoordinates(f64RingCentrePoint_X, f64RingCentrePoint_Y, f64RingCentrePoint_Z);
+
+        /* Calculate Total current in the RingOfCurrent */
+        f64Current = crSolenoid.m_f64Current * f64WireDensity * fabs(f64Step);
+
+        /* Calculate Fied and FieldDerivative */
+        RingOfCurrent_Field(RingCentrePoint, crSolenoid.m_f64Rs, f64Current, crInvestigationPoint, &CurrentB);
+        RingOfCurrent_FieldDerivative(RingCentrePoint, crSolenoid.m_f64Rs, f64Current, crInvestigationPoint, Field_dBr);
+
+        /* Get magnetic moment projection on R-axis */
+        GetMagneticMoment(CurrentB, rBall.m_f64Volume, rBall.m_f64Mu, rBall.m_MagneticMoment);
+        f64MagneticMoment_R = sqrt(rBall.m_MagneticMoment.m_f64X * rBall.m_MagneticMoment.m_f64X +
+                                   rBall.m_MagneticMoment.m_f64Y * rBall.m_MagneticMoment.m_f64Y);
+
+        /* Get Force projection on R-axis */
+        f64F1 = crSolenoid.m_f64Core_Mu * f64MagneticMoment_R * Field_dBr[0];
+        f64F2 = crSolenoid.m_f64Core_Mu * rBall.m_MagneticMoment.m_f64Z * Field_dBr[1];
+
+        f64CurrentFr = f64F1 + f64F2;
+
+        /* Append force of current RingOfCurrent to f64Fr_Result */
+        *pf64Fr_Result += f64CurrentFr;
+
+        /* Increase Ring Centre Point Z co-ordinate */
+        f64RingCentrePoint_Z += f64Step;
+    }
 
     return TRUE;
 }

@@ -440,6 +440,7 @@ BOOL Bd_Integral_Test()
     }
     return TRUE;
 }
+
 /*BOOL MacroTest()
 {
     CVector3D B, MagneticMoment;
@@ -449,10 +450,37 @@ BOOL Bd_Integral_Test()
     return FALSE;
 }
 */
+
+BOOL FieldInsideRingOfCurrent_Test()
+{
+    F64 f64X = 0.0;
+    F64 f64Rs = 0.005;
+
+    CPoint3D RingCentrePoint(0.0, 0.0, 0.0);
+    CPoint3D InvestigatonPoint;
+
+    CVector3D B;
+
+    while(f64X < f64Rs)
+    {
+        InvestigatonPoint.SetCoordinates(f64X, 0.0, 0.0);
+
+        CIntegration::RingOfCurrent_Field(RingCentrePoint, f64Rs, 1, InvestigatonPoint, &B);
+        f64X += 0.0001;
+
+        printf("Bz = %f\n", B.m_f64Z);
+    }
+
+    return TRUE;
+}
+
 int main()
 {
     printf("========= MagneticFieldTest =========\n\n");
-    Bd_Integral_Test();
+
+    FieldInsideRingOfCurrent_Test();
+
+    //Bd_Integral_Test();
     //RingOfCurrent_BioSavar_Test();
     //RingOfCurrent_Field_Test();
 

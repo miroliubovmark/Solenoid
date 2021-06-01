@@ -74,6 +74,49 @@ BOOL CrossProductTest()
     return TRUE;
 }
 
+BOOL GetAbs_Test()
+{
+    CVector3D Vector;
+
+    Vector.SetCoordinates(0.0, 0.0, 0.0);
+    if(Vector.GetAbs() != 0.0)
+    {
+        return FALSE;
+    }
+
+    Vector.SetCoordinates(1.0, 0.0, 0.0);
+    if(fabs(Vector.GetAbs() - 1.0) > 1E-5)
+    {
+        return FALSE;
+    }
+
+    Vector.SetCoordinates(0.0, 1.0, 0.0);
+    if(fabs(Vector.GetAbs() - 1.0) > 1E-5)
+    {
+        return FALSE;
+    }
+
+    Vector.SetCoordinates(0.0, 0.0, 1.0);
+    if(fabs(Vector.GetAbs() - 1.0) > 1E-5)
+    {
+        return FALSE;
+    }
+
+    Vector.SetCoordinates(1.0, 1.0, 1.0);
+    if(fabs(Vector.GetAbs() - sqrt(3.0)) > 1E-5)
+    {
+        return FALSE;
+    }
+
+    Vector.SetCoordinates(6.0, -3.0, 2.0);
+    if(fabs(Vector.GetAbs() - 7.0) > 1E-5)
+    {
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
 /*BOOL EllInt_1_Test()
 {
     F64 f64K = 0.5;
@@ -139,10 +182,19 @@ int main()
 {
     printf("========= ToolsTest =========\n\n");
 
+    if(GetAbs_Test())
+    {
+        printf("GetAbs()......Ok\n");
+    }
+    else
+    {
+        printf("GetAbs()......Error\n");
+    }
+
     //EllInt_1_Test();
     //EllInt_2_Test();
 
-    F64 f64Result;
+    //F64 f64Result;
     //f64Result = Integrate();
 
     //printf("Result = %f\n", f64Result);

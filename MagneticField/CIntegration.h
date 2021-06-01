@@ -10,11 +10,11 @@
 #define TopLimit PI
 
 
-#define GetMagneticMoment(B, f64V, f64Mu, pMagneticMoment) \
+#define GetMagneticMoment(B, f64V, f64Mu, MagneticMoment) \
 {\
-    (pMagneticMoment).m_f64X = (f64Mu - 1) * (B).m_f64X * (f64V) / (f64Mu * Mu0);\
-    (pMagneticMoment).m_f64Y = (f64Mu - 1) * (B).m_f64Y * (f64V) / (f64Mu * Mu0);\
-    (pMagneticMoment).m_f64Z = (f64Mu - 1) * (B).m_f64Z * (f64V) / (f64Mu * Mu0);\
+    (MagneticMoment).m_f64X = (f64Mu - 1) * (B).m_f64X * (f64V) / (f64Mu * Mu0);\
+    (MagneticMoment).m_f64Y = (f64Mu - 1) * (B).m_f64Y * (f64V) / (f64Mu * Mu0);\
+    (MagneticMoment).m_f64Z = (f64Mu - 1) * (B).m_f64Z * (f64V) / (f64Mu * Mu0);\
 }
 
 #define GetForce(MagneticMoment, Field_dBr, F)\
@@ -32,10 +32,13 @@ using namespace Tools;
 struct Solenoid
 {
     /** Length of solenoid */
-    F64 m_f64SolenoidLength;
+    //F64 m_f64SolenoidLength;
 
     /** Radius of solenoid */
     F64 m_f64Rs;
+
+    /** Mu of solenoid core */
+    F64 m_f64Core_Mu;
 
     /** Geometric parameters of solenoid */
     CPoint3D m_SolenoidEdge1;
@@ -49,14 +52,32 @@ struct Solenoid
 };
 
 
+struct Ball
+{
+    /** Mu of ball material */
+    F64 m_f64Mu;
+
+    /** Radius of the ball */
+    F64 m_f64Radius;
+
+    /** Volume of the ball */
+    F64 m_f64Volume;
+
+    /** Vector of magnetic moment */
+    CVector3D m_MagneticMoment;
+};
+
+
 class CIntegration
 {
 public:
     CIntegration();
     ~CIntegration();
 
-    static BOOL IntegrateSolenoid(const Solenoid& rSolenoid, const CPoint3D& crInvestigationPoint,
-                                  F64 WireDensity, CVector3D *pResult);
+    static BOOL IntegrateSolenoid_Field(const Solenoid& crSolenoid, const CPoint3D& crInvestigationPoint,
+                                        F64 WireDensity, CVector3D *pResult);
+    static BOOL IntegrateSolenoid_Force(const Solenoid& crSolenoid, Ball& rBall, const CPoint3D& crInvestigationPoint,
+                                        F64 f64WireDensity, F64* pf64Fr_Result);
     static BOOL RingOfCurrent_BioSavar(const CPoint3D RingCentrePoint, const F64 f64Rs, const F64 f64Current,
                                        const CPoint3D InvestigationPoint, const U64 u64NVertexes, CVector3D *pResult);
     static BOOL RingOfCurrent_Field(const CPoint3D& crRingCentrePoint, const F64 f64Rs, const F64 f64Current,
