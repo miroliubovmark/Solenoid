@@ -7,6 +7,7 @@ set(TEST_PROJECT MagneticFieldTest)
 set(SIMULATION Simulation)
 set(FORCE_PROFILE Force_profile)
 set(LINES_OF_FORCE LinesOfForce)
+set(LINES_OF_FORCE_SOLENOID LinesOfForce_solenoid)
 
 project(${PROJECT})
 
@@ -45,6 +46,8 @@ add_executable(${TEST_PROJECT} ${TEST_PROJECT}.cpp)
 add_executable(${SIMULATION} ${SIMULATION}.cpp)
 add_executable(${FORCE_PROFILE} ${FORCE_PROFILE}.cpp)
 add_executable(${LINES_OF_FORCE} ${LINES_OF_FORCE}.cpp)
+add_executable(${LINES_OF_FORCE_SOLENOID} ${LINES_OF_FORCE_SOLENOID}.cpp)
+
 
 target_link_libraries(${PROJECT} Tools)
 target_link_libraries(${TEST_PROJECT} Tools)
@@ -52,6 +55,7 @@ target_link_libraries(${MAIN} Tools)
 target_link_libraries(${SIMULATION} Tools)
 target_link_libraries(${FORCE_PROFILE} Tools)
 target_link_libraries(${LINES_OF_FORCE} Tools)
+target_link_libraries(${LINES_OF_FORCE_SOLENOID} Tools)
 
 
 target_link_libraries(${TEST_PROJECT} ${PROJECT})
@@ -59,3 +63,4 @@ target_link_libraries(${MAIN} ${PROJECT})
 target_link_libraries(${SIMULATION} ${PROJECT})
 target_link_libraries(${FORCE_PROFILE} ${PROJECT})
 target_link_libraries(${LINES_OF_FORCE} ${PROJECT})
+target_link_libraries(${LINES_OF_FORCE_SOLENOID} ${PROJECT})

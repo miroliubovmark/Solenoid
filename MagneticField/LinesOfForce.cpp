@@ -74,8 +74,8 @@ int main()
             plstOfPoints_Y->push_back(InvestigationPoint.m_f64Y);
             plstOfPoints_Z->push_back(InvestigationPoint.m_f64Z);
 
-            CIntegration::RingOfCurrent_BioSavar(RingCentrePoint, f64Rs, f64Current, InvestigationPoint, 10000, &B);
-            //CIntegration::RingOfCurrent_Field(RingCentrePoint, f64Rs, f64Current, InvestigationPoint, &B);
+            //CIntegration::RingOfCurrent_BioSavar(RingCentrePoint, f64Rs, f64Current, InvestigationPoint, 10000, &B);
+            CIntegration::RingOfCurrent_Field(RingCentrePoint, f64Rs, f64Current, InvestigationPoint, &B);
 
             if(bFlag)
             {

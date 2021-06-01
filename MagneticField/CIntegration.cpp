@@ -137,7 +137,7 @@ BOOL CIntegration::RingOfCurrent_Field(const CPoint3D& crRingCentrePoint, const 
 {
     F64 f64R_Result, f64Z_Result, f64X_Result, f64Y_Result, f64R_Integral, f64Z_Integral1, f64Z_Integral2, f64N, f64CosTheta, f64SinTheta;
 
-    f64N = 10000;
+    f64N = 1000;
 
     F64 f64R, f64Z;
     f64R = sqrt(crInvestigationPoint.m_f64X * crInvestigationPoint.m_f64X + crInvestigationPoint.m_f64Y * crInvestigationPoint.m_f64Y);

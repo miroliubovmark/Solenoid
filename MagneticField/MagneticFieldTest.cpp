@@ -480,6 +480,7 @@ int main()
 
     FieldInsideRingOfCurrent_Test();
 
+    #if 0
     //Bd_Integral_Test();
     //RingOfCurrent_BioSavar_Test();
     //RingOfCurrent_Field_Test();
@@ -493,6 +494,7 @@ int main()
     //IntegralTest();
 
     //BZ1_FromR();
+    #endif
 
     return 0;
 }
