@@ -188,29 +188,30 @@ BOOL Br_Itegral_Test()
 
     {
         f64R = 1.0;
-        f64Rs = 0.025;
+        f64Rs = 0.005;
         f64Z = 0.0;
-        f64N = 1000.0;
+        f64N = 2000.0;
 
-        F64 f64WolframResult = 0.235896;
+        F64 f64WolframResult = 0.023563;
         F64 f64Result = CIntegration::B_Integral1(f64R, f64Rs, f64Z, f64N);
 
         printf("Wolfram:\t\t\t%f\n", f64WolframResult);
         printf("CIntegration::Br_Integral:\t%f\n\n", f64Result);
+        printf("error:\t%f\n\n", fabs(f64Result-f64WolframResult)*100/f64WolframResult);
     }
-
 
     {
         f64R = 1.0;
-        f64Rs = 0.025;
+        f64Rs = 0.005;
         f64Z = 0.1;
-        f64N = 1000.0;
+        f64N = 2000.0;
 
-        F64 f64WolframResult = 0.115046;
+        F64 f64WolframResult = 0.0229841;
         F64 f64Result = CIntegration::B_Integral1(f64R, f64Rs, f64Z, f64N);
 
         printf("Wolfram:\t\t\t%f\n", f64WolframResult);
         printf("CIntegration::Br_Integral:\t%f\n\n", f64Result);
+        printf("error:\t%f\n\n", fabs(f64Result-f64WolframResult)*100/f64WolframResult);
     }
 
     {
@@ -224,67 +225,57 @@ BOOL Br_Itegral_Test()
 
         printf("Wolfram:\t\t\t%f\n", f64WolframResult);
         printf("CIntegration::Br_Integral:\t%f\n\n", f64Result);
+        printf("error:\t%f\n\n", fabs(f64Result-f64WolframResult)*100/f64WolframResult);
     }
 
-#if 0
-    {
-        f64R = 0.0;
-        f64Rs = 0.025;
-        f64Z = 0.0;
-        f64N = 1000.0;
-
-        F64 f64WolframResult = ;
-        F64 f64Result = CIntegration::Br_Integral(f64R, f64Rs, f64Z, f64N);
-
-        printf("Wolfram:\t\t\t%f\n", f64WolframResult);
-        printf("CIntegration::Br_Integral:\t%f\n\n", f64Result);
-    }
-
-    {
-        f64R = 0.015;
-        f64Rs = 0.025;
-        f64Z = 0.05;
-        f64N = 1000.0;
-
-        F64 f64WolframResult = ;
-        F64 f64Result = CIntegration::Br_Integral(f64R, f64Rs, f64Z, f64N);
-
-        printf("Wolfram:\t\t\t%f\n", f64WolframResult);
-        printf("CIntegration::Br_Integral:\t%f\n\n", f64Result);
-    }
-#endif
     return TRUE;
 }
+
 
 BOOL Bz_Integral1_Test()
 {
     F64 f64R, f64Rs, f64Z, f64N;
 
-
     {
         f64R = 1.0;
-        f64Rs = 0.025;
+        f64Rs = 0.005;
         f64Z = 0.0;
         f64N = 1000.0;
 
-        F64 f64WolframResult = 19.767;
+        F64 f64WolframResult = 3.14177;
         F64 f64Result = CIntegration::B_Integral2(f64R, f64Rs, f64Z, f64N);
 
         printf("Wolfram:\t\t\t%f\n", f64WolframResult);
         printf("CIntegration::Bz_Integral1:\t%f\n\n", f64Result);
+        printf("error:\t%f\n\n", fabs(f64Result-f64WolframResult)*100/f64WolframResult);
     }
 
     {
-        f64R = 1.0;
+        f64R = 0.5;
         f64Rs = 0.025;
-        f64Z = 1.0;
+        f64Z = 0.1;
         f64N = 1000.0;
 
-        F64 f64WolframResult = 6.97968;
+        F64 f64WolframResult = 23.8172;
         F64 f64Result = CIntegration::B_Integral2(f64R, f64Rs, f64Z, f64N);
 
         printf("Wolfram:\t\t\t%f\n", f64WolframResult);
         printf("CIntegration::Bz_Integral1:\t%f\n\n", f64Result);
+        printf("error:\t%f\n\n", fabs(f64Result-f64WolframResult)*100/f64WolframResult);
+    }
+
+    {
+        f64R = 0.0;
+        f64Rs = 0.025;
+        f64Z = 0.1;
+        f64N = 1000.0;
+
+        F64 f64WolframResult = 2868.51;
+        F64 f64Result = CIntegration::B_Integral2(f64R, f64Rs, f64Z, f64N);
+
+        printf("Wolfram:\t\t\t%f\n", f64WolframResult);
+        printf("CIntegration::Bz_Integral1:\t%f\n\n", f64Result);
+        printf("error:\t%f\n\n", fabs(f64Result-f64WolframResult)*100/f64WolframResult);
     }
 #if 0
     {
@@ -389,55 +380,60 @@ BOOL Bd_Integral_Test()
 {
     F64 f64R, f64Rs, f64Z; U64 u64N;
 
-
     {
-        f64R = 0.02;
+        f64R = 0.5;
         f64Rs = 0.025;
-        f64Z = 0.0;
-        u64N = 10000;
-        //F64 f64WolframResult = 19.767;
+        f64Z = 0.1;
+        u64N = 2000;
+        F64 f64WolframResult = 11.0624;
         F64 f64Result = CIntegration::dB_Integral1(f64R, f64Rs, f64Z, u64N);
 
-        //printf("Wolfram:\t\t\t%f\n", f64WolframResult);
+        printf("Wolfram:\t\t\t%f\n", f64WolframResult);
         printf("CIntegration::Bz_Integral1:\t%f\n\n", f64Result);
+        printf("error:\t%f\n\n", fabs(f64Result-f64WolframResult)*100/f64WolframResult);
     }
 
     {
-        f64R = 0.02;
+        f64R = 0.5;
         f64Rs = 0.025;
-        f64Z = 0.0;
-        u64N = 10000;
+        f64Z = 0.1;
+        u64N = 2000;
 
-        //F64 f64WolframResult = 6.97968;
+        F64 f64WolframResult = 46.6876;
         F64 f64Result = CIntegration::dB_Integral2(f64R, f64Rs, f64Z, u64N);
 
-        //printf("Wolfram:\t\t\t%f\n", f64WolframResult);
-        printf("CIntegration::Bz_Integral1:\t%f\n\n", f64Result);
-    }
-    {
-        f64R = 0.029793;
-        f64Rs = 0.025;
-        f64Z = 0.0;
-        u64N = 1000000;
-        //F64 f64WolframResult = 19.767;
-        F64 f64Result = CIntegration::dB_Integral1(f64R, f64Rs, f64Z, u64N);
-
-        //printf("Wolfram:\t\t\t%f\n", f64WolframResult);
-        printf("CIntegration::Bz_Integral1:\t%f\n\n", f64Result);
+        printf("Wolfram:\t\t\t%f\n", f64WolframResult);
+        printf("CIntegration::Bz_Integral2:\t%f\n\n", f64Result);
+        printf("error:\t%f\n\n", fabs(f64Result-f64WolframResult)*100/f64WolframResult);
     }
 
     {
         f64R = 0.029793;
-        f64Rs = 0.025;
-        f64Z = 0.0;
-        u64N = 1000000;
+        f64Rs = 0.005;
+        f64Z = 0.15;
+        u64N = 2000;
+        F64 f64WolframResult = 595.988;
+        F64 f64Result = CIntegration::dB_Integral1(f64R, f64Rs, f64Z, u64N);
 
-        //F64 f64WolframResult = 6.97968;
+        printf("Wolfram:\t\t\t%f\n", f64WolframResult);
+        printf("CIntegration::Bz_Integral1:\t%f\n\n", f64Result);
+        printf("error:\t%f\n\n", fabs(f64Result-f64WolframResult)*100/f64WolframResult);
+    }
+
+    {
+        f64R = 0.029793;
+        f64Rs = 0.15;
+        f64Z = 0.15;
+        u64N = 2000;
+
+        F64 f64WolframResult = 3945.8;
         F64 f64Result = CIntegration::dB_Integral2(f64R, f64Rs, f64Z, u64N);
 
-        //printf("Wolfram:\t\t\t%f\n", f64WolframResult);
-        printf("CIntegration::Bz_Integral1:\t%f\n\n", f64Result);
+        printf("Wolfram:\t\t\t%f\n", f64WolframResult);
+        printf("CIntegration::Bz_Integral2:\t%f\n\n", f64Result);
+        printf("error:\t%f\n\n", fabs(f64Result-f64WolframResult)*100/f64WolframResult);
     }
+
     return TRUE;
 }
 

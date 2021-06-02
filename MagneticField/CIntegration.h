@@ -9,6 +9,18 @@
 #define LowLimit 0
 #define TopLimit PI
 
+/** Number of iterations for B_Integral1 Inimplementating the accuracy 0.1% */
+#define B_Integral1_Niterations 2000
+
+/** Number of iterations for B_Integral2 Inimplementating the accuracy 0.1% */
+#define B_Integral2_Niterations 1000
+
+/** Number of iterations for dB_Integral1 Inimplementating the accuracy 0.1% */
+#define dB_Integral1_Niterations 2000
+
+/** Number of iterations for dB_Integral2 Inimplementating the accuracy 0.1% */
+#define dB_Integral2_Niterations 2000
+
 
 #define GetMagneticMoment(B, f64V, f64Mu, MagneticMoment) \
 {\
