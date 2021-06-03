@@ -74,21 +74,18 @@ void PrintLaunchInfo(Solenoid solenoid, U64 u64NInvPoints, F64 f64R1, F64 f64R2)
 
 int main()
 {
-    /** Length of solenoid */
-    F64 f64SolenoidLength = 0.01;    /* m */
-
     /** Radius of solenoid */
     F64 f64Rs = 0.005;              /* m */
 
     /** Geometric parameters of solenoid */
-    const CPoint3D SolenoidEdge1(0.0, 0.0, -0.05);
+    const CPoint3D SolenoidEdge1(0.0, 0.0, 0.0);
     const CPoint3D SolenoidEdge2(0.0, 0.0, -0.15);
 
     /** Current in wire */
     F64 f64Current = 1;             /* A */
 
     /** Number of Source Points in solenoid */
-    U64 u64NSourcePoints = 1;
+    U64 u64NSourcePoints = 100;
 
     /** Wire density */
     F64 WireDensity = 1000;
@@ -116,7 +113,7 @@ int main()
     /** Range of Investigation Point x-coordinate */
     F64 f64R1, f64R2;
     f64R1 = 0.0;
-    f64R2 = 0.01;                      /* m */
+    f64R2 = 0.2;                      /* m */
 
     /** Distance between Investigation Points */
     F64 f64Step = (f64R2 - f64R1) / u64NInvestigationPoints;
@@ -159,10 +156,7 @@ int main()
     VOfB2.reserve(u64NInvestigationPoints);
     VOfB_BS.reserve(u64NInvestigationPoints);
 
-    CPoint3D RingCentrePoint(0.0, 0.0, -0.05);
-
-
-    std::list<F64> lst_Bx, lst_By, lst_Bz, lst_dBr_dr, lst_dBr_dz, lst_Fr, lst_x;
+    std::list<F64> lst_Fr, lst_x;
     std::list<std::list<F64>*> lstData;
 
     F64 f64Fr;
@@ -174,19 +168,11 @@ int main()
     MagneticBall.m_f64Radius = 1E-3;
     MagneticBall.m_f64Volume = 4 / 3 * PI * (MagneticBall.m_f64Radius * MagneticBall.m_f64Radius * MagneticBall.m_f64Radius);
 
-
-
     for(U64 u64i = 0.0; u64i < u64NInvestigationPoints; ++u64i)
     {
-
         /* Update investigation point */
         f64InvPointX = f64R1 + f64Step * static_cast<F64>(u64i);
         InvestigationPoint.SetCoordinates(f64InvPointX, f64InvPointY, f64InvPointZ);
-
-        //if((0.0045 < InvestigationPoint.m_f64X) && (InvestigationPoint.m_f64X < 0.0055))
-        //{
-        //    continue;
-        //}
 
         CIntegration::IntegrateSolenoid_Force(solenoid, MagneticBall, InvestigationPoint, WireDensity, &f64Fr);
 

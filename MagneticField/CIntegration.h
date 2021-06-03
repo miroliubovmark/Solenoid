@@ -75,6 +75,9 @@ struct Ball
     /** Volume of the ball */
     F64 m_f64Volume;
 
+    /** Mass of the ball */
+    F64 m_f64M;
+
     /** Vector of magnetic moment */
     CVector3D m_MagneticMoment;
 };
@@ -90,6 +93,8 @@ public:
                                         F64 WireDensity, CVector3D *pResult);
     static BOOL IntegrateSolenoid_Force(const Solenoid& crSolenoid, Ball& rBall, const CPoint3D& crInvestigationPoint,
                                         F64 f64WireDensity, F64* pf64Fr_Result);
+    static BOOL IntegrateSolenoid_Force(const Solenoid& crSolenoid, Ball& rBall, const CPoint3D& crInvestigationPoint,
+                                        F64 f64WireDensity, CVector3D* pForce);
     static BOOL RingOfCurrent_BioSavar(const CPoint3D RingCentrePoint, const F64 f64Rs, const F64 f64Current,
                                        const CPoint3D InvestigationPoint, const U64 u64NVertexes, CVector3D *pResult);
     static BOOL RingOfCurrent_Field(const CPoint3D& crRingCentrePoint, const F64 f64Rs, const F64 f64Current,

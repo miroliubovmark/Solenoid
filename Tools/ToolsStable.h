@@ -22,6 +22,7 @@ namespace Tools
 {
     class CMathFunc;
     class CVector3D;
+    class CVector4D;
     class CPoint3D;
 } /* End of namespace Tools */
 
@@ -29,6 +30,7 @@ namespace Tools
 #include "UBaseTypes.h"
 #include "CMathFunc.h"
 #include "CVector3D.h"
+#include "CVector4D.h"
 #include "CPoint3D.h"
 
 #endif /* TOOLSSTABLE_H */

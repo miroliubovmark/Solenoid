@@ -133,11 +133,85 @@ BOOL CIntegration::IntegrateSolenoid_Force(const Solenoid& crSolenoid, Ball& rBa
     return TRUE;
 }
 
+BOOL CIntegration::IntegrateSolenoid_Force(const Solenoid& crSolenoid, Ball& rBall, const CPoint3D& crInvestigationPoint, F64 f64WireDensity, CVector3D* pForce)
+{
+    F64 f64Fr_Result = 0;
+
+    F64 f64Step;
+    f64Step = (crSolenoid.m_SolenoidEdge2.m_f64Z- crSolenoid.m_SolenoidEdge1.m_f64Z) / crSolenoid.m_u64NSourcePoints;
+
+    CPoint3D RingCentrePoint;
+    CVector3D CurrentB;
+
+    F64 f64RingCentrePoint_X, f64RingCentrePoint_Y, f64RingCentrePoint_Z, f64Current;
+    f64RingCentrePoint_X = crSolenoid.m_SolenoidEdge1.m_f64X;
+    f64RingCentrePoint_Y = crSolenoid.m_SolenoidEdge1.m_f64Y;
+    f64RingCentrePoint_Z = crSolenoid.m_SolenoidEdge1.m_f64Z + (f64Step / 2);
+
+    F64 Field_dBr[2];
+    F64 f64MagneticMoment_R, f64F1, f64F2, f64CurrentFr;
+
+    for(U64 i = 0; i < crSolenoid.m_u64NSourcePoints; ++i)
+    {
+        /* Set updated co-ordinates to RingCentrePoint */
+        RingCentrePoint.SetCoordinates(f64RingCentrePoint_X, f64RingCentrePoint_Y, f64RingCentrePoint_Z);
+
+        /* Calculate Total current in the RingOfCurrent */
+        f64Current = crSolenoid.m_f64Current * f64WireDensity * fabs(f64Step);
+
+        /* Calculate Fied and FieldDerivative */
+        RingOfCurrent_Field(RingCentrePoint, crSolenoid.m_f64Rs, f64Current, crInvestigationPoint, &CurrentB);
+        RingOfCurrent_FieldDerivative(RingCentrePoint, crSolenoid.m_f64Rs, f64Current, crInvestigationPoint, Field_dBr);
+
+        /* Get magnetic moment projection on R-axis */
+        GetMagneticMoment(CurrentB, rBall.m_f64Volume, rBall.m_f64Mu, rBall.m_MagneticMoment);
+        f64MagneticMoment_R = sqrt(rBall.m_MagneticMoment.m_f64X * rBall.m_MagneticMoment.m_f64X +
+                                   rBall.m_MagneticMoment.m_f64Y * rBall.m_MagneticMoment.m_f64Y);
+
+        /* Get Force projection on R-axis */
+        f64F1 = crSolenoid.m_f64Core_Mu * f64MagneticMoment_R * Field_dBr[0];
+        f64F2 = crSolenoid.m_f64Core_Mu * rBall.m_MagneticMoment.m_f64Z * Field_dBr[1];
+
+        f64CurrentFr = f64F1 + f64F2;
+
+        /* Append force of current RingOfCurrent to f64Fr_Result */
+        f64Fr_Result += f64CurrentFr;
+
+        /* Increase Ring Centre Point Z co-ordinate */
+        f64RingCentrePoint_Z += f64Step;
+    }
+
+    CVector3D SolenoidToInv_Vector(crSolenoid.m_SolenoidEdge1, crInvestigationPoint);
+    F64 f64R, f64CosTheta, f64SinTheta;
+
+    f64R = SolenoidToInv_Vector.GetAbs();
+
+    if(f64R < 1E-5)
+    {
+        f64SinTheta = 0.0;
+        f64CosTheta = 0.0;
+    }
+    else
+    {
+        f64CosTheta = (crInvestigationPoint.m_f64X - crSolenoid.m_SolenoidEdge1.m_f64X) / f64R;
+        f64SinTheta = (crInvestigationPoint.m_f64Y - crSolenoid.m_SolenoidEdge1.m_f64Y) / f64R;
+    }
+
+    F64 f64ForceX, f64ForceY, f64ForceZ;
+    f64ForceX = f64Fr_Result * f64CosTheta;
+    f64ForceY = f64Fr_Result * f64SinTheta;
+    f64ForceZ = 0.0;
+
+    pForce->SetCoordinates(f64ForceX, f64ForceY, f64ForceZ);
+
+    return TRUE;
+}
+
 BOOL CIntegration::RingOfCurrent_Field(const CPoint3D& crRingCentrePoint, const F64 f64Rs, const F64 f64Current, const CPoint3D& crInvestigationPoint, CVector3D *pResult)
 {
     F64 f64R_Result, f64Z_Result, f64X_Result, f64Y_Result, f64R_Integral, f64Z_Integral1, f64Z_Integral2, f64N, f64CosTheta, f64SinTheta;
 
-    f64N = 1000;
+    //f64N = 1000;
 
     F64 f64R, f64Z;
     f64R = sqrt(crInvestigationPoint.m_f64X * crInvestigationPoint.m_f64X + crInvestigationPoint.m_f64Y * crInvestigationPoint.m_f64Y);
@@ -154,11 +228,11 @@ BOOL CIntegration::RingOfCurrent_Field(const CPoint3D& crRingCentrePoint, const 
         f64CosTheta = (crInvestigationPoint.m_f64X - crRingCentrePoint.m_f64X) / f64R;
     }
 
-    f64R_Integral = B_Integral1(f64R, f64Rs, f64Z, f64N);
+    f64R_Integral = B_Integral1(f64R, f64Rs, f64Z, B_Integral1_Niterations);
     f64R_Result = Mu0 * f64Current / (2 * PI) * f64Z * f64Rs * f64R_Integral;
 
-    f64Z_Integral1 = B_Integral2(f64R, f64Rs, f64Z, f64N);
-    f64Z_Integral2 = B_Integral1(f64R, f64Rs, f64Z, f64N);
+    f64Z_Integral1 = B_Integral2(f64R, f64Rs, f64Z, B_Integral2_Niterations);
+    f64Z_Integral2 = B_Integral1(f64R, f64Rs, f64Z, B_Integral1_Niterations);
     f64Z_Result = Mu0 * f64Current * f64Rs / (2 * PI) * (f64Rs * f64Z_Integral1 - f64R * f64Z_Integral2);
 
     f64X_Result = f64R_Result * f64CosTheta;

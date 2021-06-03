@@ -15,12 +15,14 @@ set(HEADER_FILES
     UBaseTypes.h
     CMathFunc.h
     CVector3D.h
+    CVector4D.h
     CPoint3D.h
 )
 
 set(SOURCE_FILES
     CMathFunc.cpp
     CVector3D.cpp
+    CVector4D.cpp
     CPoint3D.cpp
 )
 
