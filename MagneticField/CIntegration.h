@@ -94,6 +94,8 @@ public:
     static BOOL IntegrateSolenoid_Force(const Solenoid& crSolenoid, Ball& rBall, const CPoint3D& crInvestigationPoint,
                                         F64 f64WireDensity, F64* pf64Fr_Result);
     static BOOL IntegrateSolenoid_Force(const Solenoid& crSolenoid, Ball& rBall, const CPoint3D& crInvestigationPoint,
+                                        const std::vector<F64>& crVWireDensity, F64* pf64Fr_Result);
+    static BOOL IntegrateSolenoid_Force(const Solenoid& crSolenoid, Ball& rBall, const CPoint3D& crInvestigationPoint,
                                         F64 f64WireDensity, CVector3D* pForce);
     static BOOL RingOfCurrent_BioSavar(const CPoint3D RingCentrePoint, const F64 f64Rs, const F64 f64Current,
                                        const CPoint3D InvestigationPoint, const U64 u64NVertexes, CVector3D *pResult);

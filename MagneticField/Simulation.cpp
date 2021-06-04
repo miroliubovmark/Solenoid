@@ -38,21 +38,21 @@ inline BOOL GetF_R2(const CVector4D& crX, const Solenoid& crSolenoid, Ball& rBal
 {
     F64 f64R = sqrt(crX.m_f64X1 * crX.m_f64X1 + crX.m_f64X3 * crX.m_f64X3);
 
-    if(f64R < 1E-5)
+    if(f64R < 1E-10)
     {
         pF->SetCoordinates(crX.m_f64X2, 0.0, crX.m_f64X4, 0.0);
         return TRUE;
     }
 
     F64 f64F = -1 / (f64R * f64R);
-    F64 f64Cos, F64Sin;
+    F64 f64Cos, f64Sin;
 
     f64Cos = crX.m_f64X1 / f64R;
-    F64Sin = crX.m_f64X3 / f64R;
+    f64Sin = crX.m_f64X3 / f64R;
 
     F64 f64Fx, f64Fy;
     f64Fx = f64F * f64Cos;
-    f64Fy = f64F * F64Sin;
+    f64Fy = f64F * f64Sin;
 
     printf("Fx = %f,    Fy = %f\n", f64Fx, f64Fy);
 
@@ -73,8 +73,8 @@ BOOL Runge_Kutta_4(CVector4D X, F64 f64T_0, F64 f64H, size_t zNIterations, Solen
     {
         GetF_R2(X, solenoid, ball, InvestigationPoint, &F1);
 
-        K1 = F1 * f64H;
-        X = X + K1 * (f64H / 2);
+        K1 = F1;// * f64H;
+        X = X + K1 * (f64H);
 
         TrajectoryPoint.SetCoordinates(X.m_f64X1, X.m_f64X3, 0.0);
         //TrajectoryPoint.Print();
@@ -131,15 +131,15 @@ int main()
     F64 f64X, f64Y, f64T;
     U64 u64NIterations = 100;
 
-    f64X = 0.006;
-    f64Y = 0.0;
+    f64X = 10.0;
+    f64Y = -1.0;
     f64T = 0.0;
-    CVector4D vBodyState(f64X, 0.0, f64Y, 0.1);     /* X1 - X ##### X2 - Vx ##### X3 - Y ##### X4 - Vy */
+    CVector4D vBodyState(f64X, 0.0, f64Y, 1.0);     /* X1 - X ##### X2 - Vx ##### X3 - Y ##### X4 - Vy */
 
     std::vector<CPoint3D> Trajectory;
     Trajectory.reserve(u64NIterations);
 
-    Runge_Kutta_4(vBodyState, f64T, 1E-2, u64NIterations, solenoid, ball, &Trajectory);
+    Runge_Kutta_4(vBodyState, f64T, 1E-5, u64NIterations, solenoid, ball, &Trajectory);
 
     std::list<F64>* pColumn1 = new std::list<F64>;
     std::list<F64>* pColumn2 = new std::list<F64>;

@@ -88,7 +88,17 @@ int main()
     U64 u64NSourcePoints = 100;
 
     /** Wire density */
-    F64 WireDensity = 1000;
+    F64 MinWireDensity = 500;
+    F64 MaxWireDendity = 1500;
+
+    std::vector<F64> vWireDensity;
+
+    vWireDensity.reserve(u64NSourcePoints);
+
+    for(size_t i = 0; i < u64NSourcePoints; ++i)
+    {
+        vWireDensity.push_back(MinWireDensity + i * (MaxWireDendity - MinWireDensity));
+    }
 
     /** Mu of solenoid core */
     F64 f64Core_Mu = 400.0;
@@ -174,7 +184,8 @@ int main()
         f64InvPointX = f64R1 + f64Step * static_cast<F64>(u64i);
         InvestigationPoint.SetCoordinates(f64InvPointX, f64InvPointY, f64InvPointZ);
 
-        CIntegration::IntegrateSolenoid_Force(solenoid, MagneticBall, InvestigationPoint, WireDensity, &f64Fr);
+        //CIntegration::IntegrateSolenoid_Force(solenoid, MagneticBall, InvestigationPoint, WireDensity, &f64Fr);
+        CIntegration::IntegrateSolenoid_Force(solenoid, MagneticBall, InvestigationPoint, vWireDensity, &f64Fr);
 
         /* Append new values to lists */
         lst_x.push_back(InvestigationPoint.m_f64X);
